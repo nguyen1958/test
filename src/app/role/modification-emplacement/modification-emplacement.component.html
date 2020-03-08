@@ -1,0 +1,320 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center" *ngIf="emplacement.numero">
+      <h3 class="panel-title">MODIFICATION DE L'EMPLACEMENT : {{emplacement.numeroEmplacementPersonalise}}</h3>
+    </span>
+    <span class="text-center" *ngIf="!emplacement.numero">
+      <h3 class="panel-title">CREATION D'UN NOUVEL EMPLACEMENT</h3>
+    </span>
+    <div class="alert alert-info">
+      <ul style="font-size: 1.2em">
+        <li>Emplacement : <span class="red">{{emplacement?.numero}}</span></li>
+        <li>Redevable :
+          <a class="violet" [routerLink]="['../Création d\'un redevable',{numRedevable:redevable?.numRedevable}]">
+            {{redevable?.civilite}} {{redevable?.nomRedevable}}
+          </a>
+        </li>
+        <li>Type d'emplacement : <span class="red">{{taxe?.libelle}}</span></li>
+        <li>Année d'exercice du type de taxe : <span class="red">{{taxe?.id.anneeExercice}}</span></li>
+        <li *ngIf="emplacement.numero">Liste des ouvrages :
+          <a class="violet" [routerLink]="['../Liste des ouvrages',{numero:emplacement?.numero}]">ouvrages actifs : ({{nbarticle}})</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-body">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.numeroEmplacementPersonalise">
+          <label class="control-label">N° emplacement personnalisé*</label>
+          <input type="text" class="form-control" formControlName="numeroEmplacementPersonalise">
+          <span class="help-block" *ngIf="formErrors.numeroEmplacementPersonalise">{{formErrors.numeroEmplacementPersonalise}}</span>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Nom commercial</label>
+          <input type="text" class="form-control" formControlName="raisonSocial">
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.nomquartier">
+          <label class="control-label">Quartier*</label>
+          <input type="text" class="form-control" formControlName="nomquartier">
+          <span class="help-block" *ngIf="formErrors.nomquartier">{{formErrors.nomquartier}}</span>
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.codeSecteur">
+          <label class="control-label">Secteur*</label>
+          <select class="form-control" formControlName="codeSecteur">
+            <option *ngFor="let secteur of secteurs" value="{{secteur.valeur}}">{{secteur.valeur}}</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.codeSecteur">{{formErrors.codeSecteur}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <label class="control-label">Observation</label>
+          <textarea class="form-control" rows="2" formControlName="observation"></textarea>
+        </div>
+      </div>
+      <div class="row top10">
+        <div class="col-sm-3">
+          <div class="col-sm-6 form-group" [class.has-error]="formErrors.numrue">
+            <label class="control-label">Numéro de voie*</label>
+            <input type="text" class="form-control" formControlName="numrue">
+            <span class="help-block" *ngIf="formErrors.numrue">{{formErrors.numrue}}</span>
+          </div>
+          <div class="col-sm-6 form-group">
+            <label class="control-label">Complémentaire</label>
+            <select class="form-control" formControlName="complementNumeroRueEmpl">
+              <option></option>
+              <option *ngFor="let compl of complnumrue" [value]="compl.valeur">{{compl.valeur}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Recherche par code rivoli&nbsp;&nbsp;</label>
+          <button class="search" (click)="onSearchRueBy('code')">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <input type="text" class="form-control" formControlName="codeVoie">
+        </div>
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Recherche par nom voie&nbsp;&nbsp;</label>
+          <button class="search" (click)="onSearchRueBy('nom')">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <input type="text" class="form-control" formControlName="searchVoie">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 form-group" [class.has-error]="formErrors.adresse1">
+          <label class="control-label">Nom de la voie*</label>
+          <input type="text" class="form-control" formControlName="adresse1" readonly>
+          <span class="help-block" *ngIf="formErrors.adresse1">{{formErrors.adresse1}}</span>
+        </div>
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Résultat trouvé
+            <span class="badge">{{rues.length}} </span>
+          </label>
+          <select class="form-control" formControlName="resultatRues">
+            <option *ngIf="rues.length==0" value="">-- RESULTAT NON TROUVE --</option>
+            <option *ngFor="let rue of rues" (click)="onselectRue(rue)">
+              {{rue.codeRivolie}} --- {{rue.prefixe}} {{rue.liaison}} {{rue.nomrue}} --- {{rue.nomquartier}} --- {{rue.codePostal}}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Adresse complémentaire</label>
+          <input type="text" class="form-control" formControlName="adresse2">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Adresse complémentaire</label>
+          <input type="text" class="form-control" formControlName="adresse3">
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.ville">
+          <label class="control-label">Ville*</label>
+          <input type="text" class="form-control" formControlName="ville">
+          <span class="help-block" *ngIf="formErrors.ville">{{formErrors.ville}}</span>
+        </div>
+        <div class="col-sm-3">
+          <div class="col-sm-6 form-group" [class.has-error]="formErrors.codePostal">
+            <label class="control-label">Code postal*</label>
+            <input type="text" class="form-control" formControlName="codePostal">
+            <span class="help-block" *ngIf="formErrors.codePostal">{{formErrors.codePostal}}</span>
+          </div>
+          <div class="col-sm-6 form-group">
+            <label class="text-center" style="width: 100%">Cedex</label>
+            <input type="checkbox" class="form-control" formControlName="cedex" [checked]="form.value.cedex=='true'?true:false"
+            (change)="$event.target.checked? form.value.cedex='true': form.value.cedex='false'">            
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Téléphone fixe</label>
+          <input type="text" class="form-control" formControlName="numTel">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Téléphone portable</label>
+          <input type="text" class="form-control" formControlName="numPortable">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Fax</label>
+          <input type="text" class="form-control" formControlName="numFax">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Email</label>
+          <input type="text" class="form-control" formControlName="email">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Rapprochement avec Idoss</label>
+          <select class="form-control" formControlName="rapprochementIdoss">
+            <option value="true">OUI</option>
+            <option value="false">NON</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Inscription</label>
+          <div class="top10 left20">
+            <label class="radio-inline">
+              <input type="radio" formControlName="codeInscription" value="RCS"> RCS
+            </label>
+            <label class="radio-inline">
+              <input type="radio" formControlName="codeInscription" value="RM"> RM
+            </label>
+          </div>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Numéro d'inscription</label>
+          <input type="text" class="form-control" formControlName="numInscription">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Date d'inscription
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" formControlName="dateInscription" 
+            placeholder="DD/MM/YYYY"
+            bsDatepicker [bsConfig]="bsConfig">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <label class="control-label">Information Idoss</label>
+          <textarea class="form-control" rows="2" formControlName="infosIdoss"></textarea>
+        </div>
+      </div>
+      <div class="row top10">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Etat de l'emplacement</label>
+          <select class="form-control" formControlName="enActivite">
+            <option *ngFor="let etat of etats" [value]="etat.valeur">{{etat.libelle!=''?etat.libelle:etat.valeur}}</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Activité de l'emplacement</label>
+          <select class="form-control" formControlName="codeProfession">
+            <option *ngFor="let profession of professions" [value]="profession.code">{{profession.libelle}}</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Début d'Activité
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" formControlName="dateDebutActivite" placeholder="DD/MM/YYYY" 
+            bsDatepicker [bsConfig]="bsConfig">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Fin d'activité
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" formControlName="dateFinActivite" placeholder="DD/MM/YYYY" 
+            bsDatepicker [bsConfig]="bsConfig">
+        </div>
+      </div>
+      <div class="alert alert-info">
+        <h4>Propriétaire</h4>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Raison sociale</label>
+          <select class="form-control" formControlName="raisonSocialeProprietaire">
+            <option *ngFor="let civilite of civilites" [value]="civilite.valeur">{{civilite.valeur}}</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Nom</label>
+          <input type="text" class="form-control" formControlName="nomProprietaire">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Prénom</label>
+          <input type="text" class="form-control" formControlName="prenomProprietaire">
+        </div>
+        <div class="col-sm-3">
+          <div class="col-sm-8 form-group">
+            <label class="control-label">Ville</label>
+            <input type="text" class="form-control" formControlName="villeProprietaire">
+          </div>
+          <div class="col-sm-4 form-group">
+            <label class="control-label">CP</label>
+            <input type="text" class="form-control" formControlName="codePostaleProprietaire">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="col-sm-6 form-group">
+            <label class="control-label">Numéro de voie</label>
+            <input type="text" class="form-control" formControlName="numVoieProprietaire">
+          </div>
+          <div class="col-sm-6 form-group">
+            <label class="control-label">Complémentaire</label>
+            <select class="form-control" formControlName="complementNumeroRueProprietaire">
+              <option></option>
+              <option *ngFor="let compl of complnumrue" [value]="compl.valeur">{{compl.valeur}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <label class="control-label">Adresse</label>
+          <input type="text" class="form-control" formControlName="adressProprietaire">
+        </div>
+        <div class="col-sm-3">
+          <label class="control-label">Complément adresse</label>
+          <input type="text" class="form-control" formControlName="compl1AdresseProprietaire">
+        </div>
+        <div class="col-sm-3">
+          <label class="control-label">Complément adresse</label>
+          <input type="text" class="form-control" formControlName="compl2AdresseProprietaire">
+        </div>
+      </div>
+      <div class="alert alert-info">
+        <h4>Redevable autorisé</h4>
+        <a [routerLink]="['../Création d\'un redevable',{numRedevable:emplacement.idRedevableAutorise}]">
+          Lien vers le redevable numero : {{form.value.idRedevableAutorise}}
+        </a>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <label class="control-label">Numéro du redevable autorisé</label>
+          <input type="text" class="form-control" formControlName="idRedevableAutorise" readonly>
+        </div>
+        <div class="col-sm-3">
+          <label class="control-label">Recherche par nom redevable&nbsp;&nbsp;</label>
+          <button class="search" (click)="onSearchRedevable()">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <input type="text" class="form-control" formControlName="searchRedevable">
+        </div>
+        <div class="col-sm-6">
+          <label class="control-label">Résultat trouvé
+            <span class="badge">{{redevablesAutorise.length}}</span>
+          </label>
+          <select class="form-control" formControlName="resultatRedevables">
+            <option *ngIf="redevablesAutorise.length==0" value="">-- RESULTAT NON TROUVE --</option>
+            <option *ngFor="let redevableAutorise of redevablesAutorise" (click)="onselectRedevable(redevableAutorise)">
+              {{redevableAutorise.numRedevable}} --- {{redevableAutorise.numrue}} {{redevableAutorise.adresse1}} --- {{redevableAutorise.nomRedevable}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 form-group">
+        <div class="btn-group btn-group-justified">
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary" [disabled]="form.invalid" (click)="onValider()">Modifier</button>
+          </div>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-danger" (click)="onSupprimer()">Supprimer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--seulement pour emplacement existant-->
+<app-photo-emplacement *ngIf="emplacement.numero" [numero]="emplacement.numero"></app-photo-emplacement>
+<app-document-emplacement *ngIf="emplacement.numero" [numero]="emplacement.numero"></app-document-emplacement>

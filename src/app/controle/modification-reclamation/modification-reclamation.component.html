@@ -1,0 +1,171 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center">
+      <h3 class="panel-title">{{title|uppercase}} : </h3>
+    </span>
+  </div>
+  <div class="panel-body">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Numéro de la réclamation</label>
+          <input type="text" class="form-control" formControlName="id" readonly>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Numéro de la facture</label>
+          <input type="text" class="form-control" formControlName="numeroFacture" readonly>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Numéro du titre</label>
+          <input type="text" class="form-control" formControlName="numeroTitre" readonly>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Année du titre</label>
+          <input type="text" class="form-control" formControlName="anneeTitre" readonly>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Date de réclamation</label>
+          <input type="text" class="form-control" formControlName="dateReclamation" readonly>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Type de taxe</label>
+          <input type="text" class="form-control" formControlName="typeTaxe" readonly>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Type de réception de la réclamation*</label>
+          <select class="form-control" formControlName="typeReception">
+            <option *ngFor="let type of typeReceptions" [value]="type.valeur">{{type.valeur}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Lien vers la facture</label>
+          <div *ngIf="form.value.idFacture">
+            <a class="violet" [href]="getUrlFacture()">{{facture?.numeroFacture}}.pdf </a>
+            ...+
+            <a [routerLink]="['../Information facture',{id:facture.idFacture}]"> D'info sur cette facture</a>
+          </div>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Lien vers le redevable</label>
+          <div *ngIf="form.value.idClient">
+            <a [routerLink]="['../Création d\'un redevable',{numRedevable:redevable.numRedevable}]">
+              {{redevable.nomRedevable}} {{redevable.prenom}}
+            </a>
+          </div>
+        </div>
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Nature de la réclamation*</label>
+          <select class="form-control" formControlName="natureReclamation">
+            <option *ngFor="let nature of natureReclamations" [value]="nature.valeur">{{nature.valeur}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Texte de la réclamation*</label>
+          <textarea class="form-control" formControlName="textReclamation" rows="4"></textarea>
+        </div>
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Liste des ouvrages liés à la réclamation*</label>
+          <div class="alert alert-info" style="height: 111px;overflow: auto">
+            <div formArrayName="articles" *ngFor="let article of form.get('articles')['controls'];let i=index">
+              <span [formGroupName]="i">
+                {{article.get('libelle').value}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Contrôle effectuée*</label>
+          <select class="form-control" formControlName="controleEffectue">
+            <option value="NON">NON</option>
+            <option value="OUI">OUI</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Date de contrôle
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" formControlName="dateControle" placeholder="DD/MM/YYYY" placement="left" bsDatepicker
+            [bsConfig]="bsConfig">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Date de la réponse
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" formControlName="dateReponse" placeholder="DD/MM/YYYY" placement="left" bsDatepicker
+            [bsConfig]="bsConfig">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Contrôlreur</label>
+          <select class="form-control" formControlName="idAgentControl">
+            <option *ngFor="let controleur of controleurs" [value]="controleur.numeroUser">{{controleur.nom}} {{controleur.prenom}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Etat de la réponse*</label>
+          <select class="form-control" formControlName="etat">
+            <option value="ENCOURS">ENCOURS</option>
+            <option value="CLOTURER">CLOTURER</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Annulation de la facture</label>
+          <div *ngIf="form.value.idFacture">
+            <a [routerLink]="['../Information facture',{id:facture.idFacture}]"> Annulation de la facture {{facture.numeroFacture}}.pdf</a>
+          </div>
+        </div>
+        <div class="col-sm-3 form-group">
+            <label class="control-label">Modèle du courrier* &nbsp;&nbsp;<button class="badge" (click)="genererCourrier()">Générer</button></label>
+            <select class="form-control" formControlName="modele">
+              <option *ngFor="let modele of modeleCourriers" [ngValue]="modele">{{modele.nomModele}}</option>
+            </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Lien courrier généré</label>
+          <div *ngIf="form.value.lienCourrier">
+            <a class="blue" [href]="getUrlCourrier(form.value.lienCourrier)">{{form.value.lienCourrier}}</a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Réponse à la réclamation</label>
+          <textarea class="form-control" formControlName="reponseReclamation" rows="4"></textarea>
+        </div>
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Liste des courriers</label>
+          <div class="alert alert-info" style="height: 111px;overflow: auto">
+            <div *ngFor="let courrierReponse of courrierReponses">
+                <a class="blue" [href]="getUrlCourrier(courrierReponse.lien)">{{courrierReponse.libelle}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-sm-3 col-sm-offset-3 form-group">
+        <button type="button" class="btn btn-primary btn-block" [disabled]="form.invalid" (click)="onValider()">Modifier</button>
+      </div>
+      <div class="col-sm-3 form-group">
+        <button type="button" class="btn btn-danger btn-block" (click)="onSupprimer()">Supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<h4 class="text-center">
+  <a [routerLink]="['../Réclamation']">Liste des réclamation</a>
+</h4>
+<div>
+  {{form.value|json}}
+</div>

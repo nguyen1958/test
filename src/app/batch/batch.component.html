@@ -1,0 +1,24 @@
+<div class="row">
+    <!--Show side bar contains task list-->
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+            <h3 class="panel-title text-center">{{title}}</h3>
+            </div>
+            <div class="panel-body">       
+                <div class="list-group">
+                    <a class="list-group-item" 
+                        *ngFor="let task of tasks"
+                        [routerLink]="task" routerLinkAcive="'active'">{{task}}
+                    </a>
+                </div>
+            </div>    
+        </div>
+    </div>
+    <!-- Child route of Role-->
+    <!--see routes is defined in app-routing module-->
+<!--component corresponding to task array in this component-->
+    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+        <router-outlet></router-outlet>
+    </div>
+</div>

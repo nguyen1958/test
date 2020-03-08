@@ -1,0 +1,68 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">HISTORIQUE DES CONTROLES</h3>
+    <p>
+      Nombre de résultats : {{controles.length}}
+    </p>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Quartier</label>
+          <select class="form-control" name="quartier" ngModel>
+            <option value=""></option>
+            <option *ngFor="let quartier of quartiers" [value]="quartier">{{quartier}}</option>
+          </select>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Date de contrôle
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" name="date" ngModel placeholder="DD/MM/YYYY" placement="left" bsDatepicker [bsConfig]="bsConfig">
+        </div>
+        <div class="col-sm-4 form-group">
+            <label class="control-label">Nom du contrôleur</label>
+            <select class="form-control" name="idControleur" ngModel>
+              <option value=""></option>
+              <option *ngFor="let controleur of controleurs" [value]="controleur.numeroUser">
+                {{controleur.nom}} {{controleur.prenom}}
+              </option>
+            </select>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+              <i class="fas fa-search"></i> Rechercher <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="controles.length">
+      <hr style="border:1px solid silver">    
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Ouvrage</th>
+            <th>Date de contrôle</th>
+            <th>Contrôleur</th>
+            <th>Quartier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of controles" routerLinkActive='active'>
+            <td>
+              <a [routerLink]="['../Modification ouvrage',{id:data.controle.idOuvrage}]">
+                {{data.controle.idOuvrage}}</a>
+            </td>
+            <td>{{data.controle.dateControle}}</td>
+            <td>{{data.controleur.nom+" "+data.controleur.prenom}}</td>
+            <td>{{data.quartier}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

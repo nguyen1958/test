@@ -1,0 +1,117 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">LISTE DES RECLAMATIONS
+      <span class="pull-right left20">
+        <img src="assets/images/rouge.jpg" width="13px" height="13px"> Clôturees</span>
+      <span class="pull-right">
+        <img src="assets/images/vert.jpg" width="15px" height="15px"> En cours</span>
+    </h3>
+    <p>
+      Nombre de résultats :{{reclamations.length}}
+    </p>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Type de taxe</label>
+          <select class="form-control" name="taxe" ngModel>
+            <option value=""></option>
+            <option *ngFor="let taxe of taxes" [value]="taxe.libelle">{{taxe.libelle}}</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">N° du redevable</label>
+          <input type="text" class="form-control" name="numRedevable" ngModel>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Nom du redevable</label>
+          <input type="text" class="form-control" name="nomRedevable" ngModel>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Date de création
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" name="date" ngModel placeholder="DD/MM/YYYY" placement="right" bsDatepicker [bsConfig]="bsConfig">
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">N° Facture</label>
+          <input type="text" class="form-control" name="numFacture" ngModel>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">N° Titre</label>
+          <input type="text" class="form-control" name="numTitre" ngModel>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Année Titre</label>
+          <input type="text" class="form-control" name="annee" ngModel>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Contrôle effectué</label>
+          <select class="form-control" name="controle" ngModel="NON">             
+              <option value="NON">NON</option>
+              <option value="OUI">OUI</option>
+              <option value="">TOUS</option>
+            </select>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Etat de la réclamation</label>
+          <select class="form-control" name="etat" ngModel="encours">
+              <option value="cloturer">CLOTURES</option>
+              <option value="encours">EN COURS</option>           
+              <option value="TOUS"></option>
+            </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+            <i class="fas fa-search"></i> Rechercher
+            <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          </button>
+        </div>
+        <div class="col-sm-2 text-center pull-right">
+          <a class="btn btn-success" [routerLink]="['../Nouvelle reclamation']">Ajouter une réclamation</a>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="reclamations.length">
+      <hr style="border:1px solid silver">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>N° réclamation</th>
+            <th>Etat</th>
+            <th>Date de la réclamation</th>
+            <th>Type de taxe</th>
+            <th>Nom redevable</th>
+            <th>N° Facture</th>
+            <th>N° Titre</th>
+            <th>Année Titre</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of reclamations" routerLinkActive='active'>
+            <td>
+              <a [routerLink]="['../Modification reclamation',{id:data.reclamation.id}]">
+                {{data.reclamation.id}}
+              </a>
+            </td>
+            <td [innerHTML]="getEtat(data.reclamation.etat)"></td>
+            <td>{{data.reclamation.dateReclamation}}</td>
+            <td>{{data.reclamation.typeTaxe}}</td>
+            <td>{{data.redevable.nomRedevable}} {{data.redevable.prenom}}</td>
+            <td>{{data.reclamation.idFacture}}</td>
+            <td>{{data.facture.numeroTitre}}</td>
+            <td>{{data.facture.anneeTitre}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div>
+  {{form.value|json}}
+</div>

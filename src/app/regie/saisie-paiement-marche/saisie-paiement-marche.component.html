@@ -1,0 +1,70 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center">
+      <h3 class="panel-title">{{title|uppercase}}</h3>
+    </span>
+  </div>
+  <div class="panel-body">
+    <form [formGroup]="form">
+      <div class="row" *ngIf="id">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">ID paiement</label>
+          <input type="text" class="form-control" formControlName="id" readonly>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Etat</label>
+          <input type="text" class="form-control" formControlName="etat" readonly>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Marché*</label>
+          <select class="form-control" formControlName="idTypeTaxe">
+            <option *ngFor="let data of taxesMarche" [value]="data.id.idImputation">{{data.id.idImputation}}--{{data.libelle}}</option>
+          </select>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Numéro quittance*</label>
+          <input type="text" class="form-control" formControlName="numeroQuittance">
+        </div>
+        <div class="col-sm-2 form-group" [class.has-error]="formErrors.datePayement">
+          <label class="control-label">Date* 
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" formControlName="datePayement"
+                  placeholder="DD/MM/YYYY" bsDatepicker [bsConfig]="bsConfig">
+          <span class="help-block" *ngIf="formErrors.datePayement">{{formErrors.dureeUnitaire}}</span>
+        </div>
+        <div class="col-sm-2 form-group" [class.has-error]="formErrors.montantPayement">
+          <label class="control-label">Montant(xx.yy)*</label>
+          <input type="text" class="form-control" formControlName="montantPayement">
+          <span class="help-block" *ngIf="formErrors.montantPayement">{{formErrors.montantPayement}}</span>
+        </div>
+        <div class="col-sm-2 form-group" [class.has-error]="formErrors.idTypePayement">
+          <label class="control-label">Type de paiement*</label>
+          <select class="form-control" formControlName="idTypePayement">
+            <option *ngFor="let data of typePayements" value="{{data.id}}">{{data.typepayement}}</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.idTypePayement">{{formErrors.idTypePayement}}</span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-sm-4 col-sm-offset-4 form-group" *ngIf="id">
+        <div class="btn-group btn-group-justified">
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary" [disabled]="form.invalid" (click)="onValider()">Modifier</button>
+          </div>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-danger" [disabled]="nbArticles>0" (click)="onSupprimer()">Supprimer</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4 col-sm-offset-4 form-group" *ngIf="!id">
+        <button type="button" class="btn btn-primary btn-block" [disabled]="form.invalid" (click)="onValider()">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>

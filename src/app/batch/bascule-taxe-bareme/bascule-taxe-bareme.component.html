@@ -1,0 +1,51 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">BASCULE DES TYPES DE TAXE ET BAREMES</h3>
+  </div>
+  <div class="panel-body">
+      <form [formGroup]="form1">
+        <div class="row">
+            <div class="col-sm-3 form-group" [class.has-error]="form1Errors.deAnnee">
+              <label class="control-label">De l'année*</label>
+              <input type="text" class="form-control" formControlName="deAnnee" readonly>
+              <span class="help-block" *ngIf="form1Errors.deAnnee">{{form1Errors.deAnnee}}</span>
+            </div>
+            <div class="col-sm-3 form-group" [class.has-error]="form1Errors.versAnnee">
+              <label class="control-label">Vers l'année*</label>
+              <input type="text" class="form-control" formControlName="versAnnee" readonly>
+              <span class="help-block" *ngIf="form1Errors.versAnnee">{{form1Errors.versAnnee}}</span>
+            </div>
+            <div class="col-sm-3 form-group" [class.has-error]="form1Errors.pourcentage">
+              <label class="control-label">Pourcentage(xx.yy)*</label>
+              <input type="text" class="form-control" formControlName="pourcentage">
+              <span class="help-block" *ngIf="form1Errors.pourcentage">{{form1Errors.pourcentage}}</span>
+            </div>
+        </div>
+        <button *ngIf="!dejaBascule" type="button" class="btn btn-primary btn-block" 
+                [disabled]="form1.invalid" (click)="basculerTaxeEtBareme()">
+          Basculer les types de taxe et les barèmes
+        </button>
+        <div class="alert alert-info red" *ngIf="dejaBascule">
+          <h4>La bascule a déjà été effectuée le {{bascule.dateBascule}} avec un pourcentage {{bascule.pourcentage}}%</h4>
+        </div>
+      </form>
+      <form [formGroup]="form2">
+        <div class="row top10">
+          <div class="col-sm-6 form-group">
+            <label class="control-label">Type de taxe*</label>
+            <select class="form-control" formControlName="typeTaxe">
+              <option value=""></option>
+              <option *ngFor="let taxe of taxes" [value]="taxe.libelle">
+                {{taxe.libelle}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-block" 
+                [disabled]="form2.invalid" (click)="basculerUneTaxe()">
+          Basculer les éléments actifs
+        </button>
+      </form>   
+  </div>
+</div>
+

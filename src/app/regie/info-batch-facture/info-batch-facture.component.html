@@ -1,0 +1,72 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center">
+      <h3 class="panel-title">INFORMATION SUR LE BATCH</h3>
+    </span>
+    <div class="alert alert-info">
+      <ul style="font-size: 1.2em">
+        <li>Date de création du batch :
+          <span class="red"> {{batch?.dateExecution}}</span>
+        </li>
+        <li>Type de taxe :
+          <span class="red"> {{batch?.typeEmplacement}}</span>
+        </li>
+        <li>Numéro du batch :
+          <span class="red"> {{batch?.id}}</span>
+        </li>
+        <li>Nombre de factures créées :
+          <span class="red"> {{batch?.nombreDeFactureCree}}</span>
+        </li>
+        <li *ngIf="batch?.aEditerDesRemboursements=='true'">
+          Nombre de remboursements créés :
+          <span class="red"> {{batch?.nombreDeRemboursementCree}}</span>
+        </li>
+        <li>Rapports & Rôle :
+          <ul>
+            <li *ngIf="batch?.aEditerDesRemboursements=='true'">
+              <a class="violet bold" [href]="getUrlRemboursement()">
+                <img src="assets/images/pdf.png" height="20px">
+                <span class="violet"> Remboursement</span>
+              </a>
+            </li>
+            <li *ngIf="batch?.aEditerDesRemboursements=='true'">
+              <a [href]="getRapport('RREM')" target="_blank">
+                <img src="assets/images/pdf.png" height="20px">
+                <span class="violet"> Rôle remboursement</span>
+              </a>
+            </li>
+            <li *ngIf="batch?.aEditeeDesFacturesAnnulee=='true'">
+              <a [href]="getRapport('RA')" target="_blank">
+                <img src="assets/images/pdf.png" height="20px">
+                <span class="violet"> Rôle annulation</span>
+              </a>
+            </li>
+            <li *ngIf="batch?.aEditeeDesFacturesAnnulee=='true'">
+              <a [href]="getRapport('RAR')" target="_blank">
+                <img src="assets/images/pdf.png" height="20px">
+                <span class="violet"> Certificat d'annulation de recette</span>
+              </a>
+            </li>
+            <li *ngIf="batch?.nombreDeFactureCree>0">
+              <a [href]="getRapport('RF')" target="_blank">
+                <img src="assets/images/pdf.png" height="20px">
+                <span class="violet"> Rôle facturation</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-6">
+        <h4>Liste des factures créées par ce batch
+          <span class="badge">{{batch?.nombreDeFactureCree}}</span>
+        </h4>
+        <textarea cols="100%" rows="5">{{factures}}</textarea>
+        <a class="violet bold" [href]="getUrlFacture()">Imprimer toutes les factures</a>
+      </div>
+    </div>
+  </div>
+</div>

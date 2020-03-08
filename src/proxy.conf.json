@@ -1,0 +1,11 @@
+{
+    "/r2tv3": { 
+      "target": "http://46.105.97.78:90/r2trs",   
+      "target": "http://localhost:8080", 
+            
+      "secure": false,
+      "pathRewrite": {
+        "^/r2tv3": ""
+      }
+    }
+  }

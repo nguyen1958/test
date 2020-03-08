@@ -1,0 +1,88 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center">
+      <h3 class="panel-title">INFORMATION SUR LA FACTURE</h3>
+    </span>
+    <div class="alert alert-info">
+      <ul style="font-size: 1.2em">
+        <li>Numéro de la facture :
+          <span class="red"> {{facture?.numeroFacture}}</span>
+        </li>
+        <li>Numéro de titre :
+          <span class="red"> {{facture?.numeroTitre}}</span>
+        </li>
+        <li>Lien facture :
+          <a class="violet" [href]="getUrlFacture()"> Facture num {{facture?.numeroFacture}}</a>
+          <span style="margin-left: 100px">
+              <a class="violet" (click)="reEditerFacture()">Re-éditer la facture</a>
+          </span>
+          <span class="left20" *ngIf="facture?.etat.toUpperCase()!='ANNULEE'">
+              <a class="violet"  (click)="relancerFacture()">Relance de la facture</a>
+          </span>       
+        </li>
+        <li>Type de taxe :
+          <span class="red"> {{facture?.typeTaxe}}</span>
+        </li>
+        <li>Date de création :
+          <span class="red"> {{facture?.dateCreation}}</span>
+        </li>
+        <li>Numéro de batch :
+          <a [routerLink]="['../Info batch',{idBatch:facture?.idBatchTraitement}]"><span class="violet"> Batch num {{facture?.idBatchTraitement}}</span></a>
+        </li>
+        <li>Redevable :
+          <a class="violet" [routerLink]="['../Création d\'un redevable',{numRedevable:redevable?.numRedevable}]">
+            {{redevable?.civilite}} {{redevable?.nomRedevable}} {{redevable?.prenom}}
+          </a>
+        </li>
+        <li>Montant :
+          <span class="red"> {{facture?.montantTotal}}</span>
+        </li>
+        <li>Solde :
+          <span class="red"> {{facture?.solde}}</span>
+        </li>
+        <li>Etat :
+          <span class="red"> {{facture?.etat}}</span>
+        </li>
+        <li>Historique des paiements :
+          <a class="violet" (click)="getPayements(facture.idFacture)">
+            Historique des paiements
+          </a>
+        </li>
+        <li *ngIf="facture?.etat.toUpperCase()=='ANNULEE'">
+          Date annulation :
+          <span class="red"> {{facture?.dateAnnulation}}</span>
+        </li>
+        <li *ngIf="motifAnnulation">
+          Motif annulation :
+          <span class="red"> {{motifAnnulation}}</span>
+        </li>
+        <li *ngIf="!motifAnnulation">
+            Motif annulation :
+            <select name="motifSelected" #motifSelected>
+              <option *ngFor="let m of listeMotifAnnulation">
+                {{m.valeur}}
+              </option>
+            </select>
+            <a class="violet" (click)="annulerFacture(motifSelected.value)"> Annuler la facture</a>
+        </li>
+      </ul>
+      <div class="text-center top10" style="font-size: 1.2em">
+        <div [innerHTML]="loading"></div>
+        <!--Afficher lien de la nouvelle facture à re-éditer-->
+        <div *ngIf="reEditerClicked">Nouvelle facture :
+          <a class="violet" [href]="getUrlFacture()"> Facture {{facture?.numeroFacture}}.pdf</a>
+        </div>
+        <!--Afficher lien de la facture de relance-->
+        <div *ngIf="relancerClicked">Relance de la facture :
+          <a class="violet" [href]="getUrlFactureRelance()"> Facture relance {{facture?.numeroFacture}}relance.pdf</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-list-paiement [payements]="payements" *ngIf="payements.length>0"></app-list-paiement>
+<div>
+  <h4 class="text-center">
+    <a [routerLink]="['../Recherche de facture']">Liste des factures</a>
+  </h4>
+</div>

@@ -1,0 +1,75 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">LISTE DES BAREMES</h3>
+    <p>
+      Nombre de résultats :{{baremes.length}}
+    </p>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Année exercice</label>
+          <input type="text" class="form-control" name="annee" ngModel>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Code barème</label>
+          <input type="text" class="form-control" name="codeBareme" ngModel>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Libellé</label>
+          <input type="text" class="form-control" name="libelle" ngModel>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Type de taxe</label>
+          <select class="form-control" name="taxe" ngModel>
+            <option></option>
+            <option *ngFor="let taxe of taxes" value="{{taxe.id.idImputation}}">{{taxe.libelle}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+            <i class="fas fa-search"></i> Rechercher
+            <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          </button>
+        </div>
+        <div class="col-sm-2 pull-right">
+          <a class="btn btn-success" [routerLink]="['../Modification bareme']">
+            <i class="fas fa-plus"></i> Ajouter un barème
+          </a>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="baremes.length">
+      <hr style="border:1px solid silver">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Année</th>
+            <th>Libellé</th>
+            <th>Type de taxe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of baremes" routerLinkActive='active'>
+            <td>
+              <a [routerLink]="['../Modification bareme',{id:data.bareme.id.code,annee:data.bareme.id.anExercice}]">
+                {{data.bareme.id.code}}
+              </a>
+            </td>
+            <td>{{data.bareme.id.anExercice}}</td>
+            <td>{{data.bareme.libelle}}</td>
+            <td>
+              <a [routerLink]="['../Modification taxe',{id:data.taxe.id.idImputation,annee:data.taxe.id.anneeExercice}]">
+                {{data.taxe.libelle}}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

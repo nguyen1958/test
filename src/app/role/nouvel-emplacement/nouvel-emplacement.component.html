@@ -1,0 +1,45 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center">
+        <h3 class="panel-title">CREATION D'UN NOUVEL EMPLACEMENT</h3>
+    </span>
+  </div>
+  <div class="panel-body">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Année*</label>
+          <input type="text" class="form-control" formControlName="annee" readonly>
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.noEmplacement">
+          <label class="control-label">N° Emplacement*</label>
+          <input type="text" class="form-control" formControlName="noEmplacement" (blur)="onTouch()">
+          <span class="help-block" *ngIf="formErrors.noEmplacement">{{formErrors.noEmplacement}}</span>
+        </div>
+        <div class="col-sm-4 form-group" [class.has-error]="formErrors.taxe">
+          <label class="control-label">Type de taxe*</label>
+          <select class="form-control" formControlName="taxe" (blur)="onTouch()">
+            <option *ngFor="let taxe of taxes" [value]="taxe.id.idImputation">{{taxe.libelle}}</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.taxe">{{formErrors.taxe}}</span>
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.secteur">
+          <label class="control-label">Secteur*</label>
+          <select class="form-control" formControlName="secteur" (blur)="onTouch()">
+            <option *ngFor="let secteur of secteurs" value="{{secteur.valeur}}">{{secteur.valeur}}</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.secteur">{{formErrors.secteur}}</span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="form-group">
+        <div class="col-sm-6 col-sm-offset-3">
+          <button type="button" class="btn btn-primary btn-block" [disabled]="form.invalid" (click)="valider()">Valider</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

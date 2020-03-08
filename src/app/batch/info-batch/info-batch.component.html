@@ -1,0 +1,86 @@
+<div *ngIf="batch=='traitement'">
+    <h4 class="blue">INFORMATION BATCH FACTURATION</h4>
+    <div class="alert alert-info">
+      <ul style="font-size: 1.2em">
+        <li>Etape facturation : <span class="red">{{data?.etapeFacturation}}</span></li>
+        <li>Date de création  : <span class="red">{{data?.dateExecution}}</span></li>
+        <li>Type de taxe      : <span class="red">{{data?.typeTaxe}}</span></li>
+        <li>Numéro batch      : <span class="red">{{data?.batchTraitement.id}}</span></li>
+        <li>Nombre de factures créées : <span class="red">{{data?.batchTraitement.nombreDeFactureCree}}</span></li>
+        <li *ngFor="let lien of data?.liens">{{lien.libelle}} :
+          <a class="violet" [href]="getUrlDocument(lien.path)" target="_blank">{{lien.nomFichier}}</a>
+        </li>
+      </ul>
+    </div>
+</div>
+<div *ngIf="batch=='filien'">
+    <h4 class="blue" style="display:inline">INFORMATION BATCH FILIEN</h4> 
+    <button type="button" class="btn btn-primary badge left20 bottom10" 
+            *ngIf="data && !data.valide" (click)="validerBatchFilien(data?.batchFilien.id)">
+      Valider le batch Filien
+    </button> 
+    <div class="alert alert-info">
+      <ul style="font-size: 1.2em">
+        <li>Date de lancement : <span class="red">{{data?.batchFilien.dateLancement}}</span></li>
+        <li>Période           : <span class="red">{{data?.typePeriode}} {{data?.periode}}</span></li>
+        <li>Numéro batch      : <span class="red">{{data?.batchFilien.id}}</span></li>
+        <li>Nombre factures impayées : <span class="red">{{data?.batchFilien.nombreFactureImpaye}}</span></li>
+        <li *ngFor="let lien of data?.liens">{{lien.libelle}} :
+          <a class="violet" [href]="getUrlDocument(lien.path)" target="_blank">{{lien.nomFichier}}</a>
+          <span class="red left10">({{lien.nombreFacture}} factures)</span>
+        </li>
+      </ul>
+    </div>
+</div>
+<div *ngIf="batch=='relance'">
+  <h4 class="blue">INFORMATION BATCH RELANCE</h4>
+  <div class="alert alert-info">
+    <ul style="font-size: 1.2em">
+      <li>Date de lancement : <span class="red">{{data?.batchRelance.dateLancement}}</span></li>
+      <li>Période           : <span class="red">{{data?.typePeriode}} {{data?.periode}}</span></li>
+      <li>Numéro batch      : <span class="red">{{data?.batchRelance.id}}</span></li>
+      <li>Nombre factures impayées : <span class="red">{{data?.batchRelance.nombreFactureImpaye}}</span></li>
+      <li *ngFor="let lien of data?.liens">{{lien.libelle}} :
+        <a class="violet" [href]="getUrlDocument(lien.path)" target="_blank">{{lien.nomFichier}}</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div *ngIf="batch=='suiviFacturation'">
+    <h4 class="blue">INFORMATION BATCH SUIVI DE FACTURATION</h4>
+    <div class="alert alert-info">
+      <ul style="font-size: 1.2em">
+        <li>Date de création : <span class="red">{{data?.dateExecution}}</span></li>
+        <li>Numéro batch      : <span class="red">{{data?.idBatch}}</span></li>
+        <li>Nombre de fichiers créés : <span class="red">{{data?.nom.length>0?'1':''}}</span></li>
+        <li *ngIf="data?.nom.length>0">Lien vers fichier :
+          <a class="violet" [href]="getUrlDocument(data?.path)" target="_blank">{{data?.nom}}</a>
+        </li>
+      </ul>
+    </div>
+</div>
+<div *ngIf="batch=='changementAdresse'">
+    <h4 class="blue">INFORMATION BATCH CHANGEMENT D'ADRESSE DES REDEVABLES</h4>
+    <div class="alert alert-info">
+        <ul style="font-size: 1.2em">
+          <li>Date de création : <span class="red">{{data?.dateExecution}}</span></li>
+          <li>Numéro batch      : <span class="red">{{data?.idBatch}}</span></li>
+          <li>Nombre de fichiers créés : <span class="red">{{data?.nom.length>0?'1':''}}</span></li>
+          <li *ngIf="data?.nom.length>0">Lien vers fichier :
+            <a class="violet" [href]="getUrlDocument(data?.path)" target="_blank">{{data?.nom}}</a>
+          </li>
+        </ul>
+      </div>
+</div>
+<div *ngIf="batch=='comptable'">
+  <h4 class="blue">INFORMATION BATCH COMPTABLE</h4>
+  <div class="alert alert-info">
+      <ul style="font-size: 1.2em">
+        <li>Date de lancement : <span class="red">{{data?.batchRapportComptable.dateLancement}}</span></li>
+        <li>Numéro batch      : <span class="red">{{data?.batchRapportComptable.id}}</span></li>
+        <li *ngFor="let lien of data?.liens">{{lien.libelle}} :
+          <a class="violet" [href]="getUrlDocument(lien.path)" target="_blank">{{lien.nomFichier}}</a>
+        </li>
+      </ul>
+    </div>
+</div>

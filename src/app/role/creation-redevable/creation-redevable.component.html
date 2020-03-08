@@ -1,0 +1,618 @@
+<form #form="ngForm">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title text-center">{{title}}</h3>
+        </div>
+        <table class="table">
+            <th class="text-center">
+                <a [routerLink]="" fragment="emplacements">
+                    <h4>Gestion des emplacements</h4>
+                </a>
+            </th>
+            <th class="text-center">
+                <a [routerLink]="" fragment="factures">
+                    <h4>Gestion des factures & réclamations</h4>
+                </a>
+            </th>
+            <th class="text-center">
+                <a [routerLink]="" fragment="paiements">
+                    <h4>Gestion des paiements</h4>
+                </a>
+            </th>
+        </table>
+        <!--Gestion validate control : use reference variable-->
+        <!--Gestion validata message : use bootstrap class has-error|control-label|help-block-->
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Nature juridique</label>
+                    <select class="form-control" name="naturejuridique" [(ngModel)]="redevable.natureJuridique">
+                        <option *ngFor="let naturejuridique of naturejuridiques" [value]="naturejuridique">{{naturejuridique}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group" [class.has-error]="nr.touched && nr.invalid">
+                    <label class="control-label">Nom*</label>
+                    <input type="text" class="form-control" name="nom" [(ngModel)]="redevable.nomRedevable" #nr="ngModel" required>
+                    <span class="help-block" *ngIf="nr.touched && nr.errors?.required">champs obligatoire</span>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Prénom</label>
+                    <input type="text" class="form-control" name="prenom" [(ngModel)]="redevable.prenom" #np="ngModel">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Nom de jeune fille</label>
+                    <input type="text" class="form-control" name="nomjeunefille" [(ngModel)]="redevable.nomJF">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Raison sociale</label>
+                    <select class="form-control" name="civilite" [(ngModel)]="redevable.civilite">
+                        <option *ngFor="let civilite of civilites" [value]="civilite.valeur">{{civilite.valeur}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Responsable / Nom de l'enseigne</label>
+                    <input type="text" class="form-control" name="responsable" [(ngModel)]="redevable.responsable">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Siren</label>
+                    <input type="text" class="form-control" name="siren" [(ngModel)]="redevable.siren">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Siret</label>
+                    <input type="text" class="form-control" name="siret" [(ngModel)]="redevable.siret">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Profession</label>
+                    <select class="form-control" name="profession" [(ngModel)]="redevable.numeroProfession">
+                        <option *ngFor="let profession of professions" [value]="profession.code">{{profession.libelle}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Nationalité</label>
+                    <input type="text" class="form-control" name="nationalite" [(ngModel)]="redevable.nationalite">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Date de naissance
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </label>
+                    <input type="text" class="form-control" name="datenaissance" placeholder="DD/MM/YYYY" [value]="redevable.dateNaissance" 
+                            (bsValueChange)="onDateNaissanceChange($event)" bsDatepicker [bsConfig]="bsConfig">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Lieu de naissance</label>
+                    <input type="text" class="form-control" name="lieunaissance" [(ngModel)]="redevable.lieuNaissance">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="col-sm-6 form-group" [class.has-error]="numrue.touched && numrue.invalid">
+                        <label class="control-label">Numéro de voie*</label>
+                        <input type="text" class="form-control" name="numrue" [(ngModel)]="redevable.numrue" #numrue="ngModel" required>
+                        <span class="help-block" *ngIf="numrue.touched && numrue.errors?.required">champs obligatoire</span>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Complémentaire</label>
+                        <select class="form-control" name="numcompl" [(ngModel)]="redevable.complementNumeroRueRedevable">
+                            <option></option>
+                            <option *ngFor="let compl of complnumrue" [value]="compl.valeur">{{compl.valeur}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Recherche par code rivoli&nbsp;&nbsp;</label>
+                    <button class="search" (click)="onSearchBy('code')">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <input type="text" class="form-control" name="coderivoli" [(ngModel)]="redevable.codeRivolie">
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label class="control-label">Recherche par nom voie&nbsp;&nbsp;</label>
+                    <button class="search" (click)="onSearchBy('nom')">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <input type="text" class="form-control" name="searchvoie" [(ngModel)]="redevable.searchVoie">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 form-group" [class.has-error]="nomvoie.touched && nomvoie.invalid">
+                    <label class="control-label">Nom de la voie*</label>
+                    <input type="text" class="form-control" name="nomvoie" [(ngModel)]="redevable.adresse1" #nomvoie="ngModel" required readonly>
+                    <span class="help-block" *ngIf="nomvoie.touched && nomvoie.errors?.required">champs obligatoire</span>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label class="control-label">Résultat trouvé
+                        <span class="badge">{{rues.length}} </span>
+                    </label>
+                    <select class="form-control" name="resultat" [(ngModel)]="redevable.resultat">
+                        <option *ngIf="rues.length==0" value="">-- RESULTAT NON TROUVE --</option>
+                        <option *ngFor="let rue of rues" (click)="onselectRue(rue)">
+                            {{rue.codeRivolie}} --- {{rue.prefixe}} {{rue.liaison}} {{rue.nomrue}} --- {{rue.nomquartier}} --- {{rue.codePostal}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 form-group">
+                    <label class="control-label">Adresse complémentaire</label>
+                    <input type="text" class="form-control" name="adressecompl1" [(ngModel)]="redevable.adresse2">
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label class="control-label">Adresse complémentaire</label>
+                    <input type="text" class="form-control" name="adressecompl2" [(ngModel)]="redevable.adresse3">
+                </div>
+                <div class="col-sm-4 form-group">
+                    <div class="col-sm-5 form-group" [class.has-error]="ville.touched && ville.invalid">
+                        <label class="control-label">Ville*</label>
+                        <input type="text" class="form-control" name="ville" [(ngModel)]="redevable.ville" #ville="ngModel" required>
+                        <span class="help-block" *ngIf="ville.touched && ville.errors?.required">champs obligatoire</span>
+                    </div>
+                    <div class="col-sm-5 form-group" [class.has-error]="cp.touched && cp.invalid">
+                        <label class="control-label">Code postal*</label>
+                        <input type="text" class="form-control" name="cp" [(ngModel)]="redevable.codePostal" #cp="ngModel" required>
+                        <span class="help-block" *ngIf="cp.touched && cp.errors?.required">champs obligatoire</span>
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label class="text-center" style="width: 100%">Cedex</label>
+                        <input type="checkbox" class="form-control" name="cedex" [checked]="redevable.rdCedex=='true'" (change)="redevable.rdCedex=$event.target.checked?'true':'false'">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Téléphone fixe</label>
+                    <input type="text" class="form-control" name="phonefixe" [(ngModel)]="redevable.numTel">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Téléphone portable</label>
+                    <input type="text" class="form-control" name="phoneportable" [(ngModel)]="redevable.numPortable">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Fax</label>
+                    <input type="text" class="form-control" name="fax" [(ngModel)]="redevable.numFax">
+                </div>
+                <div class="col-sm-3 form-group" [class.has-error]="email.touched && email.invalid">
+                    <label class="control-label">Email</label>
+                    <input type="text" email class="form-control" name="email" [(ngModel)]="redevable.email" #email="ngModel">
+                    <span class="help-block" *ngIf="email.touched && email.errors?.email">Email incorrect</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Actif</label>
+                    <select class="form-control" name="actif" [(ngModel)]="redevable.actif">
+                        <option value="true">OUI</option>
+                        <option value="false">NON</option>
+                    </select>
+                </div>
+                <div class="col-sm-9 form-group">
+                    <label class="control-label">Information complémentaire</label>
+                    <input type="text" class="form-control" name="infocompl" [(ngModel)]="redevable.informationComplementaire ">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <label class="control-label">Remarque</label>
+                    <textarea class="form-control" rows="2" name="commentaire" [(ngModel)]="redevable.commentaire"></textarea>
+                </div>
+            </div>
+            <div class="alert alert-info">
+                <h4>LIQUIDATEUR</h4>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Raison sociale</label>
+                    <select class="form-control" name="lqraisonsocial" [(ngModel)]="redevable.raisonSocialeLiquidateur">
+                        <option *ngFor="let civilite of civilites" [value]="civilite.valeur">{{civilite.valeur}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Nom</label>
+                    <input type="text" class="form-control" name="lqnom" [(ngModel)]="redevable.nomLiquidateur">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Prénom</label>
+                    <input type="text" class="form-control" name="lqprenom" [(ngModel)]="redevable.prenomLiquidateur">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Numéro de voie</label>
+                        <input type="text" class="form-control" name="lqnumrue" [(ngModel)]="redevable.numVoieLiquidateur">
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="control-label">Complémentaire</label>
+                        <select class="form-control" name="lqnumcompl" [(ngModel)]="redevable.complementNumeroRueLiquidateur">
+                            <option></option>
+                            <option *ngFor="let compl of complnumrue" [value]="compl.valeur">{{compl.valeur}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Nom de la voie</label>
+                    <input type="text" class="form-control" name="lqnomvoie" [(ngModel)]="redevable.adressLiquidateur">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Adresse complémentaire</label>
+                    <input type="text" class="form-control" name="lqadressecompl1" [(ngModel)]="redevable.complement1AdressLiquidateur">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Adresse complémentaire</label>
+                    <input type="text" class="form-control" name="lqadressecompl2" [(ngModel)]="redevable.complement2AdressLiquidateur">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Ville</label>
+                    <input type="text" class="form-control" name="lqville" [(ngModel)]="redevable.villeeLiquidateur">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Code postal</label>
+                    <input type="text" class="form-control" name="lqcp" [(ngModel)]="redevable.codePostaleLiquidateur">
+                </div>
+                <div class="col-sm-1 form-group">
+                    <label class="text-center" style="width: 100%">Cedex</label>
+                    <input type="checkbox" class="form-control" name="lqcedex" [checked]="redevable.cedexLiquidateur=='true'" (change)="redevable.cedexLiquidateur=$event.target.checked?'true':'false'">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Téléphone fixe</label>
+                    <input type="text" class="form-control" name="lqphonefixe" [(ngModel)]="redevable.numTelFixeLiquidateur">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Téléphone portable</label>
+                    <input type="text" class="form-control" name="lqphoneportable" [(ngModel)]="redevable.numTelPortableLiquidateur">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Fax</label>
+                    <input type="text" class="form-control" name="lqfax" [(ngModel)]="redevable.numTelFaxeLiquidateur">
+                </div>
+                <div class="col-sm-3 form-group" [class.has-error]="lqemail.touched && lqemail.invalid">
+                    <label class="control-label">Email</label>
+                    <input type="text" email class="form-control" name="lqemail" [(ngModel)]="redevable.emailLiquidateur" #lqemail="ngModel">
+                    <span class="help-block" *ngIf="lqemail.touched && lqemail.errors?.email">Email incorrect</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3 form-group" *ngIf="!numRedevable">
+                    <button type="button" class="btn btn-primary btn-block active" [disabled]="form.invalid" (click)="saveRedevable()">
+                        Valider
+                    </button>
+                </div>
+                <div class="col-sm-6 col-sm-offset-3 form-group" *ngIf="numRedevable">
+                    <div class="btn-group btn-group-justified">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-primary" [disabled]="form.invalid" (click)="saveRedevable()">
+                                Modifier
+                            </button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-danger" (click)="deleteRedevable()">
+                                Supprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div *ngIf="numRedevable">
+    <!-- GESTION DES EMPLACEMENTS-->
+    <div id="emplacements" class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <h3 class="panel-title">GESTION DES EMPLACEMENTS
+                <span class="carreGris pull-right">
+                    <img src="assets/images/gris.jpg" width="15px" height="15px"> Terminé</span>
+                <span class="carreVert pull-right">
+                    <img src="assets/images/vert.jpg" width="15px" height="15px"> En activité</span>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <div class="form-control" (change)="onChangeEtat()">
+                        <label class="radio-inline">
+                            <input type="radio" value="enActivite" name="etat" [(ngModel)]="etat"> En activité
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="termine" name="etat" [(ngModel)]="etat"> Terminé
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="tous" name="etat" [(ngModel)]="etat"> Tous
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <a class="btn btn-success pull-right" [routerLink]="['../Nouvel emplacement',{numRedevable:numRedevable}]">
+                        <i class="fas fa-plus-circle"></i> Ajouter un emplacement
+                    </a>
+                </div>
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Etat</th>
+                        <th>Photos</th>
+                        <th>Infos</th>
+                        <th>Secteur</th>
+                        <th>N° emplacement</th>
+                        <th>Nom commercial</th>
+                        <th>Adresse emplacement</th>
+                        <th>Ouvrage actif</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of emplacements" routerLinkActive='active'>
+                        <td>
+                            <a [routerLink]="['../Modification de l\'emplacement',{numero:data.emplacement.numero}]">
+                                {{data.taxe ? data.taxe.libelle:"-"}}
+                            </a>
+                        </td>
+                        <td [innerHTML]="getContent('etat',data.emplacement.enActivite)"></td>
+                        <td [innerHTML]="getContent('image',data.image)"></td>
+                        <td [innerHTML]="getContent('alerte',data.alerte)"></td>
+                        <td>{{data.emplacement.codeSecteur}}</td>
+                        <td>{{data.emplacement.numero}}</td>
+                        <td>{{data.emplacement.raisonSocial}}</td>
+                        <td>{{data.emplacement.numrue}} {{data.emplacement.complementNumeroRueEmpl}} {{data.emplacement.adresse1}}</td>
+                        <td>
+                            <a [routerLink]="['../Liste des ouvrages',{numero:data.emplacement?.numero}]">Liste des ouvrages&nbsp;<span class="badge">{{data.article}}</span></a>          
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- GESTION FACTURES ET RECLAMATIONS-->
+    <div id="factures" class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title text-center">GESTION DES FACTURES ET RECLAMATIONS
+                <span class="carreGris pull-right">
+                    <img src="assets/images/rouge.jpg" width="15px" height="15px"> Clôturée</span>
+                <span class="carreVert pull-right">
+                    <img src="assets/images/vert.jpg" width="15px" height="15px"> En cours</span>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <h4>FACTURE ANNEE :</h4>
+                </div>
+                <div class="col-sm-1 from-group">
+                    <input type="text" class="form-control" name="annee" [(ngModel)]="bufferFacture.anneeExercice">
+                </div>
+                <div class="col-sm-1">
+                    <button type="button" class="btn btn-primary" (click)="onChangeEtatFacture()">Valider</button>
+                </div>
+                <div class="col-sm-2 form-group">
+                    <div class="form-control" (change)="onChangeEtatFacture()">
+                        <label class="radio-inline">
+                            <input type="radio" value="enCours" name="etatFacture" [(ngModel)]="bufferFacture.etat"> En cours
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="paye" name="etatFacture" [(ngModel)]="bufferFacture.etat"> Payée
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- LISTE DES FACTURES -->
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Facture</th>
+                        <th>Type de taxe</th>
+                        <th>Date de création de la facture</th>
+                        <th>Numéro titre</th>
+                        <th>Etat facture</th>
+                        <th>Réclamations</th>
+                        <th>ER</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of factures | filter : bufferFacture.etat " routerLinkActive='active'>
+                        <td>
+                            <a [href]="getUrlFacture(data)">
+                                <img src="assets/images/pdf.png" height="20px"> Facture No{{data.numeroFacture}}.pdf
+                            </a>
+                        </td>
+                        <td>{{data.typeTaxe}}</td>
+                        <td>{{data.dateCreation}}</td>
+                        <td>{{data.numeroTitre}}</td>
+                        <td>{{data.etat}}</td>
+                        <td>A voir reclamation</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- FACTURES ANNULEES -->
+            <div class="row">
+                <div class="col-sm-3">
+                    <h4>FACTURES ANNULEES : </h4>
+                </div>
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Facture</th>
+                        <th>Type de taxe</th>
+                        <th>Date de création de la facture</th>
+                        <th>Numéro titre</th>
+                        <th>Etat facture</th>
+                        <th>Réclamations</th>
+                        <th>ER</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of factures | filter : 'annule' " routerLinkActive='active'>
+                        <td>
+                            <a [routerLink]="['../Création d\'un redevable']">
+                                <img src="assets/images/pdf.png" height="20px"> Facture No{{data.numeroFacture}}.pdf
+                            </a>
+                        </td>
+                        <td>{{data.typeTaxe}}</td>
+                        <td>{{data.dateCreation}}</td>
+                        <td>{{data.numeroTitre}}</td>
+                        <td>{{data.etat}}</td>
+                        <td>A voir reclamation</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- REMBOURSEMENTS -->
+            <div class="row ">
+                <div class="col-sm-3">
+                    <h4>REMBOURSEMENTS : </h4>
+                </div>
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Remboursement</th>
+                        <th>Type de taxe</th>
+                        <th>Montant total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of remboursements" routerLinkActive='active'>
+                        <td>
+                            <a [routerLink]="['../Création d\'un redevable']">
+                                <img src="assets/images/pdf.png" height="20px"> Remboursement No{{data.id}}.pdf
+                            </a>
+                        </td>
+                        <td>{{data.typeTaxe}}</td>
+                        <td>{{data.montantTotal}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- GESTION PAIEMENTS -->
+    <div id="paiements" class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title text-center">GESTION DES PAIEMENTS EN COURS</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-2 form-group">
+                    <div class="form-control" (change)="onChangeEtatFacture()">
+                        <label class="radio-inline">
+                            <input type="radio" value="enCours" name="etatPaiement" [(ngModel)]="bufferFacture.etat"> En cours
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="paye" name="etatPaiement" [(ngModel)]="bufferFacture.etat"> Payée
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- LISTE DES PAIEMENTS -->
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Facture</th>
+                        <th>Date de création de la facture</th>
+                        <th>Montant total</th>
+                        <th>Solde</th>
+                        <th>Paiement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of factures | filter : bufferFacture.etat" routerLinkActive='active'>
+                        <td>
+                            <a [routerLink]="['../Création d\'un redevable']">
+                                <img src="assets/images/pdf.png" height="20px"> Facture No{{data.numeroFacture}}.pdf
+                            </a>
+                        </td>
+                        <td>{{data.dateCreation}}</td>
+                        <td>{{data.montantTotal}}</td>
+                        <td>{{data.solde}}</td>
+                        <td>
+                            <input type="checkbox" (change)="onCheckPaiement($event.target.checked,data)" [disabled]="data.solde==0" [checked]="data.solde==0">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- formulaire de payement-->
+    <form #formPayement="ngForm" *ngIf="bufferPayement.nombreDeFacturePayee>0">
+        <div class="row">
+            <div class="col-sm-3 form-group" [class.has-error]="tp.touched && tp.invalid">
+                <label class="control-label">Type de paiement*</label>
+                <select class="form-control" name="typePayement" [(ngModel)]="bufferPayement.typePayement" required #tp="ngModel">
+                    <option *ngFor="let data of typePayements" (click)="onselectTypePayement(data)" [value]="data.typepayement">{{data.typepayement}}</option>
+                </select>
+                <span class="help-block" *ngIf="tp.touched && tp.errors?.required">champs obligatoire</span>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label class="control-label">Montant total</label>
+                <input type="text" class="form-control" name="montantTotal" [(ngModel)]="bufferPayement.montantTotal" readonly>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label class="control-label">Date de paiement*
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </label>
+                <input type="text" class="form-control" name="datePayement" placeholder="DD/MM/YYYY" [value]="bufferPayement.datePayement" required
+                     (bsValueChange)="onDatePayementChange($event)" bsDatepicker [bsConfig]="bsConfig">                
+            </div>
+            <div class="col-sm-3 form-group">
+                <label class="control-label">Nombre de facture(s) à payer</label>
+                <input type="text" class="form-control" name="nbFacture" [(ngModel)]="bufferPayement.nombreDeFacturePayee" readonly>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 form-group" [class.has-error]="mp.touched && mp.invalid">
+                <label class="control-label">{{bufferPayement.typePayement=='Remise'?'Montant de la remise*':'Montant perçu*'}}</label>
+                <input type="text" class="form-control" name="montantPayement" [(ngModel)]="bufferPayement.montantPayement" required #mp="ngModel">
+                <span class="help-block" *ngIf="mp.touched && mp.errors?.required">champs obligatoire</span>
+            </div>
+            <div *ngIf="bufferPayement.typePayement!='Remise'">
+                <div class="col-sm-3 form-group" [class.has-error]="nq.touched && nq.invalid">
+                    <label class="control-label">Numéro de quittance*</label>
+                    <input type="text" class="form-control" name="numeroQuittance" [(ngModel)]="bufferPayement.numeroQuittance" required #nq="ngModel">
+                    <span class="help-block" *ngIf="nq.touched && nq.errors?.required">champs obligatoire</span>
+                </div>
+            </div>
+            <div *ngIf="bufferPayement.typePayement=='Virement' || bufferPayement.typePayement=='Cheque'">
+                <div class="col-sm-3 form-group" [class.has-error]="nch.touched && nch.invalid">
+                    <label class="control-label">Numéro de chèque*</label>
+                    <input type="text" class="form-control" name="numeroCheque" [(ngModel)]="bufferPayement.numeroCheque" required #nch="ngModel">
+                    <span class="help-block" *ngIf="nch.touched && nch.errors?.required">champs obligatoire</span>
+                </div>
+                <div class="col-sm-3 form-group" [class.has-error]="bq.touched && bq.invalid">
+                    <label class="control-label">Banque*</label>
+                    <select class="form-control" name="banque" [(ngModel)]="bufferPayement.idBanque" required #bq="ngModel">
+                        <option *ngFor="let banque of banques" [value]="banque.id">{{banque.libelle}}</option>
+                    </select>
+                    <span class="help-block" *ngIf="bq.touched && bq.errors?.required">champs obligatoire</span>
+                </div>
+            </div>
+            <div *ngIf="bufferPayement.typePayement=='Carte bancaire'">
+                <div class="col-sm-3 form-group" [class.has-error]="nt.touched && nt.invalid">
+                    <label class="control-label">Numéro de transaction*</label>
+                    <input type="text" class="form-control" name="numeroTransaction" [(ngModel)]="bufferPayement.numeroTransaction" required
+                        #nt="ngModel">
+                    <span class="help-block" *ngIf="nt.touched && nt.errors?.required">champs obligatoire</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3 form-group">
+                <button type="button" class="btn btn-primary btn-block active" [disabled]="formPayement.invalid" (click)="savePayement()">Valider</button>
+            </div>
+        </div>
+    </form>
+    <div>
+        <h4 class="text-center">
+            <a [routerLink]="['../Liste des redevables']">Liste des redevables</a>
+        </h4>
+    </div>
+</div>

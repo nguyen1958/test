@@ -1,0 +1,122 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading" (click)="hiddenTraitement=!hiddenTraitement">
+    <h3 class="panel-title">LANCEMENT DE BATCH DE FACTURATION</h3>
+  </div>
+  <div class="panel-body" [hidden]="hiddenTraitement">
+    <form [formGroup]="formTraitement">
+      <div class="row">
+        <div class="col-sm-2 col-sm-offset-3 form-group" [class.has-error]="formErrors.dateExecution">
+          <label class="control-label">Date de création
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" formControlName="dateExecution" placeholder="DD/MM/YYYY" 
+                  placement="left" bsDatepicker [bsConfig]="bsConfig">
+          <span class="help-block" *ngIf="formErrors.dateExecution">{{formErrors.dateExecution}}</span>
+        </div>
+        <div class="col-sm-4 form-group" [class.has-error]="formErrors.typeTaxe">
+          <label class="control-label">Type de taxe</label>
+          <select class="form-control" formControlName="typeTaxe">
+            <option value=""></option>
+            <option *ngFor="let taxe of taxes" [ngValue]="taxe.libelle">{{taxe.libelle}}</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.typeTaxe">{{formErrors.typeTaxe}}</span>
+        </div>
+        <div class="col-sm-3 form-group" *ngIf="formTraitement.get('typeTaxe').value=='TLPE'">
+            <label class="control-label">Année facturation TLPE</label>
+            <select class="form-control" formControlName="anneeFacturationTLPE">
+              <option *ngFor="let annee of anneeTlpe" [value]="annee">{{annee}}</option>
+            </select>
+          </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer" [hidden]="hiddenTraitement">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 form-group">
+        <div class="btn-group btn-group-justified">
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-warning" [disabled]="formTraitement.invalid || loadingPrefacturation" (click)="lancerTraitement('preFacturation')">
+              Pré-facturation <i class="fas fa-spinner fa-spin" *ngIf="loadingPrefacturation"></i>
+            </button>
+          </div>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary" [disabled]="formTraitement.invalid || loadingFacturation" (click)="lancerTraitement('facturation')">
+              Facturation <i class="fas fa-spinner fa-spin" *ngIf="loadingFacturation"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-info-batch batch="traitement" [data]="retourTraitement" [hidden]="hiddenTraitement"></app-info-batch>
+<div class="panel panel-primary text-center">
+  <div class="panel-heading" (click)="hiddenFilien=!hiddenFilien">
+    <h3 class="panel-title">LANCEMENT BATCH FILIEN</h3>
+  </div>
+  <div class="panel-body" [hidden]="hiddenFilien">
+    <form [formGroup]="formFilien">
+        <div class="row">
+            <div class="col-sm-12">
+              <label class="radio-inline" class="left10">
+                <input type="radio" formControlName="choix" value="t"> Trimestrielle
+              </label>
+              <select name="actif" class="left10" formControlName="trimestre">
+                  <option *ngFor="let i of trimestre" [value]="i">{{i}}</option>
+              </select>
+              <label class="radio-inline" class="left30">
+                <input type="radio" formControlName="choix" value="a"> Annuelle
+              </label>
+            </div>
+        </div>
+    </form>
+  </div>
+  <div class="panel-footer" [hidden]="hiddenFilien">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 form-group">
+        <button type="button" class="btn btn-primary btn-block" [disabled]="formFilien.invalid || loadingFilien" (click)="lancerFilien()">
+          Lancer filien <i class="fas fa-spinner fa-spin" *ngIf="loadingFilien"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-info-batch batch="filien" [data]="retourFilien" [hidden]="hiddenFilien"></app-info-batch>
+<div class="panel panel-primary text-center">
+  <div class="panel-heading" (click)="hiddenRelance=!hiddenRelance">
+    <h3 class="panel-title">RELANCE</h3>
+  </div>
+  <div class="panel-body" [hidden]="hiddenRelance">
+    <form [formGroup]="formRelance">
+        <div class="row">
+            <div class="col-sm-12">
+              <label class="radio-inline" class="left10">
+                <input type="radio" formControlName="choix" value="m"> Mensuelle
+              </label>
+              <select name="mensuel" class="left10" formControlName="mensuel">
+                <option *ngFor="let i of mois" [value]="i">{{i}}</option>
+              </select>
+              <label class="radio-inline" class="left30">
+                <input type="radio" formControlName="choix" value="t"> Trimestrielle
+              </label>
+              <select name="trimestre" class="left10" formControlName="trimestre">
+                  <option *ngFor="let i of trimestre" [value]="i">{{i}}</option>
+              </select>
+              <label class="radio-inline" class="left30">
+                <input type="radio" formControlName="choix" value="a"> Annuelle
+              </label>
+            </div>
+          </div>
+    </form>
+  </div>
+  <div class="panel-footer" [hidden]="hiddenRelance">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 form-group">
+        <button type="button" class="btn btn-primary btn-block" [disabled]="formRelance.invalid || loadingRelance" (click)="lancerRelance()">
+          Lancer relance <i class="fas fa-spinner fa-spin" *ngIf="loadingRelance"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-info-batch batch="relance" [data]="retourRelance" [hidden]="hiddenRelance"></app-info-batch>

@@ -1,0 +1,76 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">LISTE DES TYPES DE TAXES</h3>
+    <p>
+      Nombre de résultats :{{taxes.length}}
+    </p>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Année exercice</label>
+          <input type="text" class="form-control" name="annee" ngModel>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Code du type de taxe</label>
+          <input type="text" class="form-control" name="typeTaxe" ngModel>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Code tri de bordeareau</label>
+          <input type="text" class="form-control" name="codeTri" ngModel>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">No env budgétaire</label>
+          <input type="text" class="form-control" name="envBuget" ngModel>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Libellé</label>
+          <input type="text" class="form-control" name="libelle" ngModel>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+            <i class="fas fa-search"></i> Rechercher
+            <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          </button>
+        </div>
+        <div class="col-sm-2 text-center pull-right">
+          <a class="btn btn-success" [routerLink]="['../Modification taxe']">Ajouter un type de taxe</a>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="taxes.length">
+      <hr style="border:1px solid silver">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Année</th>
+            <th>Libellé</th>
+            <th>Désignation</th>
+            <th>Code tri bordereau</th>
+            <th>No enveloppe budgétaire</th>
+            <th>Code budget</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of taxes" routerLinkActive='active'>
+            <td>
+              <a [routerLink]="['../Modification taxe',{id:data.id.idImputation,annee:data.id.anneeExercice}]">
+                {{data.id.idImputation}}
+              </a>
+            </td>
+            <td>{{data.id.anneeExercice}}</td>
+            <td>{{data.libelle}}</td>
+            <td>{{data.designation}}</td>
+            <td>{{data.code}}</td>
+            <td>{{data.section}}</td>
+            <td>{{data.codeBudget}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

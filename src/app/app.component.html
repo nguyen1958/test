@@ -1,0 +1,38 @@
+<!-- login if user not login yet -->
+<!-- Router to Accueil if user is login-->
+<!-- Login-->
+<app-login *ngIf="!dataService.user"></app-login>
+<!-- Home after login-->
+<div *ngIf="dataService.user">
+    <div class="header">
+      <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand">R2T Analogon - Mairie de Toulon</a>
+            <button type="button" class="btn btn-default navbar-btn pull-left" (click)="logout()">Déconnexion</button>
+        </div>
+        <ul class="nav navbar-nav pull-right">
+            <li *ngFor="let menu of menus" routerLinkActive='active'>
+                <a [routerLink]="menu">{{menu}}</a>
+            </li>
+        </ul>
+      </nav>
+    </div>    
+    <!--see routes is defined in app-routing module-->
+    <!--component corresponding to menu array-->
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+    <div class="footer">
+      <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+          <div class="navbar-header">        
+              <a href="http://www.analogon.fr" target="_blank"><img alt="logoAnalogon" src="assets/images/logoAnalogon.png"></a>
+              <span style="font-size: 0.7em">R2T - Version V4.3.3_05062018 </span>
+              <button class="btn btn-success left20" (click)="onTest()">Test function on console</button>    
+          </div>
+      </nav>
+    </div>
+</div>
+    
+
+
+

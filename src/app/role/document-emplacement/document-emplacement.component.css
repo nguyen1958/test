@@ -1,0 +1,10 @@
+
+td span {
+    text-decoration: underline;
+    cursor: pointer;
+    color:blue;
+}
+
+td span:hover{
+    color:red;
+}

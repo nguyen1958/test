@@ -1,0 +1,193 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center">
+      <h3 class="panel-title">MODIFICATION D'UN OUVRAGE</h3>
+    </span>
+    <div class="alert alert-info">
+      <p *ngIf="dejaFacturer" class="text-center red">Cet ouvrage est facturé au moins une fois!!</p>
+      <ul style="font-size: 1.2em">
+        <li>Ouvrage ID : <span class="red">{{article?.idArticle}}</span></li>
+        <li>Exercice : <span class="red">{{taxe?.id.anneeExercice}}</span></li>
+        <li>Redevable :
+          <a class="violet" [routerLink]="['../Création d\'un redevable',{numRedevable:redevable?.numRedevable}]">
+            {{redevable?.civilite}} {{redevable?.nomRedevable}}
+          </a>
+        </li>
+        <li>Type d'emplacement : <span class="red">{{taxe?.libelle}}</span></li>
+        <li>Secteur : <span class="red">{{emplacement?.codeSecteur}}</span></li>
+        <li>
+          <a class="violet" [routerLink]="['../Modification de l\'emplacement',{numero:emplacement?.numero}]">
+            Emplacement : {{emplacement?.raisonSocial}} : {{emplacement?.numrue+" "+emplacement?.adresse1+" "+emplacement?.adresse2+"
+            "+emplacement?.adresse3}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-body">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-6 form-group" [class.has-error]="formErrors.codeBareme">
+          <label class="control-label">Bareme*</label>
+          <select formControlName="codeBareme" class="form-control" (change)="onChangeBareme()">
+            <option *ngFor="let bareme of baremes" [value]="bareme.id.code">
+              {{bareme.id.code}}----{{bareme.libelle}}----{{bareme.prixUnit.toFixed()}} euros----{{bareme.uniteDeTravail}}/{{bareme.dureeUnitaire}}
+            </option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.codeBareme">{{formErrors.codebareme}}</span>
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.dateDebutAutorisation">
+          <label class="control-label">Date de mise en application*
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" placeholder="DD/MM/YYYY" formControlName="dateDebutAutorisation" bsDatepicker [bsConfig]="bsConfig">
+          <span class="help-block" *ngIf="formErrors.dateDebutAutorisation">{{formErrors.dateDebutAutorisation}}</span>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Date de fin de validité
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" placeholder="DD/MM/YYYY" formControlName="dateFinAutorisation" bsDatepicker [bsConfig]="bsConfig">
+        </div>
+      </div>
+      <!--TAXE TLPE-->
+      <div class="row" *ngIf="taxe.libelle=='TLPE'">
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.typeOuvrage">
+          <label class="control-label">Type*</label>
+          <select class="form-control" formControlName="typeOuvrage">
+            <option value="Normal">Normal</option>
+            <option value="Numerique">Numerique</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.typeOuvrage">{{formErrors.typeOuvrage}}</span>
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.nombreFaceAffiche">
+          <label class="control-label">Nombre d'affiche/face*</label>
+          <input type="text" class="form-control" formControlName="nombreFaceAffiche">
+          <span class="help-block" *ngIf="formErrors.nombreFaceAffiche">{{formErrors.nombreFaceAffiche}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Nom ouvrage</label>
+          <input type="text" class="form-control" formControlName="nom">
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.quantite_article">
+          <label class="control-label">Quantité*</label>
+          <input type="text" class="form-control" formControlName="quantite_article">
+          <span class="help-block" *ngIf="formErrors.quantite_article">{{formErrors.quantite_article}}</span>
+        </div>
+        <div *ngIf="uniteTravail=='ML' || uniteTravail=='M2'">
+          <div class="col-sm-3 form-group" *ngIf="uniteTravail=='M2'">
+            <label class="control-label">Choix de dimension</label>
+            <div class="top10 left20">
+              <label class="radio-inline">
+                <input type="radio" formControlName="choix" value="lineaire"> Long&Larg
+              </label>
+              <label class="radio-inline">
+                <input type="radio" formControlName="choix" value="surface"> Surface
+              </label>
+            </div>
+          </div>
+          <div class="col-sm-3 form-group" *ngIf="form.get('choix').value=='lineaire'">
+            <div class="col-sm-6" [class.has-error]="formErrors.longueur">
+              <label class="control-label">Longueur*</label>
+              <input type="text" class="form-control" formControlName="longueur">
+              <span class="help-block" *ngIf="formErrors.longueur">{{formErrors.longueur}}</span>
+            </div>
+            <div class="col-sm-6" [class.has-error]="formErrors.largeur" [hidden]="uniteTravail=='ML'">
+              <label class="control-label">Largeur*</label>
+              <input type="text" class="form-control" formControlName="largeur">
+              <span class="help-block" *ngIf="formErrors.largeur">{{formErrors.largeur}}</span>
+            </div>
+          </div>
+          <div class="col-sm-3 form-group" *ngIf="form.get('choix').value!='lineaire'" [hidden]="uniteTravail=='ML'" [class.has-error]="formErrors.surface">
+            <label class="control-label">Surface*</label>
+            <input type="text" class="form-control" formControlName="surface">
+            <span class="help-block" *ngIf="formErrors.surface">{{formErrors.surface}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9 form-group">
+          <label class="control-label">Commentaire</label>
+          <textarea class="form-control" rows="2" formControlName="commentaire"></textarea>
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.etat">
+          <label class="control-label">Etat de l'ouvrage</label>
+          <select formControlName="etat" class="form-control">
+            <option *ngFor="let etat of etats" [value]="etat.valeur">{{etat.libelle}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.dateDernierControl">
+          <label class="control-label">Date du dernier control*
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" placeholder="DD/MM/YYYY" formControlName="dateDernierControl" bsDatepicker [bsConfig]="bsConfig">
+          <span class="help-block" *ngIf="formErrors.dateDernierControl">{{formErrors.dateDernierControl}}</span>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Date du prochain control
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" placeholder="DD/MM/YYYY" formControlName="dateProchainControl" bsDatepicker [bsConfig]="bsConfig">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Date de fin d'autorisation IDOSS
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" placeholder="DD/MM/YYYY" formControlName="dateFinAutorisationIdoss" bsDatepicker
+            [bsConfig]="bsConfig">
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.dernierePeriodeFacture">
+          <label class="control-label">Numéro dernière période facturé</label>
+          <input type="text" class="form-control" formControlName="dernierePeriodeFacture">
+          <span class="help-block" *ngIf="formErrors.dernierePeriodeFacture">{{formErrors.dernierePeriodeFacture}}</span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 form-group">
+          <div class="btn-group btn-group-justified">
+              <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-primary" (click)="saveArticle()" [disabled]="form.invalid">Valider</button>
+              </div>
+              <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-danger" (click)="deleteArticle()" [disabled]="dejaFacturer">Supprimer</button>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">HISTORIQUE</h3>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped table-bordered text-center">
+      <thead>
+        <tr>
+          <th>Etat</th>
+          <th>Date de modification</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody class="blue">
+        <tr *ngFor="let data of historiquesEtat">
+          <td>{{data.etatOuvrage}}</td>
+          <td>{{data.dateModification}}</td>
+          <td>{{data.typeModification}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<app-photo-emplacement [numero]="emplacement?.numero"></app-photo-emplacement>
+<app-document-emplacement [numero]="emplacement?.numero"></app-document-emplacement>
+<h4 class="text-center">
+  <a [routerLink]="['../Liste des redevables']">Liste des redevables</a>
+</h4>

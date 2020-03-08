@@ -1,0 +1,299 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center">
+      <h3 class="panel-title">{{title}}</h3>
+    </span>
+  </div>
+  <div class="panel-body">
+    <form [formGroup]="form">
+      <div class="row">
+        <div formGroupName="id">
+          <div class="col-sm-2 form-group">
+            <label class="control-label">Année exercice*</label>
+            <input type="text" class="form-control" formControlName="anneeExercice" readonly>
+          </div>
+        </div>
+        <div class="col-sm-5 form-group" [class.has-error]="formErrors.libelle">
+          <label class="control-label">Libellé*</label>
+          <input type="text" class="form-control" formControlName="libelle">
+          <span class="help-block" *ngIf="formErrors.libelle">{{formErrors.libelle}}</span>
+        </div>
+        <div class="col-sm-5 form-group" [class.has-error]="formErrors.designation">
+          <label class="control-label">Désignation*</label>
+          <input type="text" class="form-control" formControlName="designation">
+          <span class="help-block" *ngIf="formErrors.designation">{{formErrors.designation}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 form-group" [class.has-error]="formErrors.codeBudget">
+          <label class="control-label">Code budget*</label>
+          <input type="text" class="form-control" formControlName="codeBudget">
+          <span class="help-block" *ngIf="formErrors.codeBudget">{{formErrors.codeBudget}}</span>
+        </div>
+        <div class="col-sm-2 form-group" [class.has-error]="formErrors.code">
+          <label class="control-label">Code tri bordereau*</label>
+          <input type="text" class="form-control" formControlName="code">
+          <span class="help-block" *ngIf="formErrors.code">{{formErrors.code}}</span>
+        </div>
+        <div class="col-sm-2 form-group" [class.has-error]="formErrors.section">
+          <label class="control-label">No enveloppe budgétaire*</label>
+          <input type="text" class="form-control" formControlName="section">
+          <span class="help-block" *ngIf="formErrors.section">{{formErrors.section}}</span>
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.minimumPerception">
+          <label class="control-label">Montant minimum de perception*</label>
+          <input type="text" class="form-control" formControlName="minimumPerception">
+          <span class="help-block" *ngIf="formErrors.minimumPerception">{{formErrors.minimumPerception}}</span>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Montant minimum de facturation</label>
+          <input type="text" class="form-control" formControlName="minimumDeFacturation">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Code fonction</label>
+          <input type="text" class="form-control" formControlName="codeFonction">
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Libellé fonction</label>
+          <input type="text" class="form-control" formControlName="libelleFonction">
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Code compte</label>
+          <input type="text" class="form-control" formControlName="codeCentreResponsable">
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Libellé compte</label>
+          <input type="text" class="form-control" formControlName="libelleCentreResponsable">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Centre d'exploitation</label>
+          <input type="text" class="form-control" formControlName="codeCentreExecution">
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Libellé Centre d'exploitation</label>
+          <input type="text" class="form-control" formControlName="libelleCentreExecution">
+        </div>
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Marché</label>
+          <select class="form-control" formControlName="marche">
+            <option *ngFor="let data of marches" value="{{data.idMarche}}">{{data.idMarche}}---{{data.nomMarche}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Contrôle terrain</label>
+          <select class="form-control" formControlName="necessiteControleTerrain">
+            <option value="OUI">OUI</option>
+            <option value="NON">NON</option>
+          </select>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Induit la facturation</label>
+          <select class="form-control" formControlName="controleInduitFacturation">
+            <option value="OUI">OUI</option>
+            <option value="NON">NON</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.typeFacturation">
+          <label class="control-label">Type de facturation*</label>
+          <select class="form-control" formControlName="typeFacturation">
+            <option *ngFor="let typeFacturation of typeFacturations" [value]="typeFacturation.valeur">
+              {{typeFacturation.valeur}}
+            </option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.typeFacturation">{{formErrors.typeFacturation}}</span>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Cycle de facturation</label>
+          <select class="form-control" formControlName="cycleFacturation">
+            <option value="Normal">Normal</option>
+            <option value="Avance-Mensuelle">Avance-Mensuelle</option>
+            <option value="Avance-Trimestrielle">Avance-Trimestrielle</option>
+            <option value="Avance-Annuelle">Avance-Annuelle</option>
+          </select>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Renouvellement auto</label>
+          <select class="form-control" formControlName="renouvellementAutomatique">
+            <option value="Oui">OUI</option>
+            <option value="Non">NON</option>
+          </select>
+        </div>
+      </div>
+      <div class="alert alert-info">
+        <h4>Gestionnaire</h4>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Nom gestionnaire </label>
+          <input type="text" class="form-control" formControlName="nomGestionnaire">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Téléphone gestionnaire </label>
+          <input type="text" class="form-control" formControlName="telGestionnaire">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Fax gestionnaire </label>
+          <input type="text" class="form-control" formControlName="faxGestionnaire">
+        </div>
+      </div>
+      <div class="alert alert-info">
+        <h4>Elu</h4>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Nom Elu</label>
+          <input type="text" class="form-control" formControlName="nomElu">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Renseignement 1</label>
+          <input type="text" class="form-control" formControlName="eluRenseignement1">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Renseignement 2</label>
+          <input type="text" class="form-control" formControlName="eluRenseignement2">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Renseignement 3</label>
+          <input type="text" class="form-control" formControlName="eluRenseignement3">
+        </div>
+      </div>
+      <div class="alert alert-info">
+        <h4>eCadre budgétaire</h4>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Chapitre</label>
+          <input type="text" class="form-control" formControlName="chapitre">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Nature</label>
+          <input type="text" class="form-control" formControlName="nature">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Fonction</label>
+          <input type="text" class="form-control" formControlName="fonction">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code interne de l'opération d'équipement</label>
+          <input type="text" class="form-control" formControlName="codeOpeEquipement">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.typeMouvement">
+          <label class="control-label" 
+                data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                Type mouvement (R,O,I) </label>
+          <input type="text" class="form-control" formControlName="typeMouvement">
+          <span class="help-block" *ngIf="formErrors.typeMouvement">Valeur autorisée R,O ou I</span>
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.sens">
+          <label class="control-label">Sens (D=Dépense, R=Recette)</label>
+          <input type="text" class="form-control" formControlName="sens">
+          <span class="help-block" *ngIf="formErrors.sens">Valeur autorisée R ou D</span>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code segmentation structurelle</label>
+          <input type="text" class="form-control" formControlName="codeSegStructurelle">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code de l'élément structurel gestionnaire</label>
+          <input type="text" class="form-control" formControlName="codeEleStructurelleGestionnaire">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code de l'élément structurel destinataire</label>
+          <input type="text" class="form-control" formControlName="codeEleStructurelleDestinataire">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code de la segmentation opérationnelle</label>
+          <input type="text" class="form-control" formControlName="codeSegOperationnel">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code élément opérationnelle</label>
+          <input type="text" class="form-control" formControlName="codeEleOperationnel">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code de la segmentation 1</label>
+          <input type="text" class="form-control" formControlName="codeSegment1">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code élément sectoriel 1</label>
+          <input type="text" class="form-control" formControlName="codeEleSectoriel1">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code de la segmentation 2</label>
+          <input type="text" class="form-control" formControlName="codeSegment2">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code élément sectoriel 2</label>
+          <input type="text" class="form-control" formControlName="codeEleSectoriel2">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code de la segmentation 3</label>
+          <input type="text" class="form-control" formControlName="codeSegment3">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code élément sectoriel 3</label>
+          <input type="text" class="form-control" formControlName="codeEleSectoriel3">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code de la segmentation 4</label>
+          <input type="text" class="form-control" formControlName="codeSegment4">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code élément sectoriel 4</label>
+          <input type="text" class="form-control" formControlName="codeEleSectoriel4">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code de la segmentation 5</label>
+          <input type="text" class="form-control" formControlName="codeSegment5">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code élément sectoriel 5</label>
+          <input type="text" class="form-control" formControlName="codeEleSectoriel5">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code de la segmentation stratégique</label>
+          <input type="text" class="form-control" formControlName="codeSegStrategique">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code élément stratégique </label>
+          <input type="text" class="form-control" formControlName="codeEleStrategique">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 form-group" *ngIf="taxe">
+        <div class="btn-group btn-group-justified">
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary" [disabled]="form.invalid" (click)="onValider()">Modifier</button>
+          </div>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-danger">Supprimer</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-sm-offset-3 form-group" *ngIf="!taxe">
+        <button type="button" class="btn btn-primary btn-block" [disabled]="form.invalid" (click)="onValider()">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+<h4 class="text-center">
+  <a [routerLink]="['../Type de taxe']">Liste des taxes</a>
+</h4>

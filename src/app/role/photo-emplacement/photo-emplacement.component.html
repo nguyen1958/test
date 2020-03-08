@@ -1,0 +1,80 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Liste des photos &nbsp;
+      <span class="badge">{{photos.length}}</span>
+    </h3>
+  </div>
+  <div class="panel-body">
+    <div>
+      <label>Ajouter un photo&nbsp;</label>
+      <input #pi style="display:inline-block" type="file" (change)="onPhotoSelected($event)">
+      <button type="button" class="btn btn-primary" (click)="onPhotoEnvoyer();pi.value=''">
+        Envoyer <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+      </button>
+    </div>
+    <!-- PHOTO AND DIAPORAMA-->
+    <div class="row" *ngIf="photos.length>0" class="top10">
+      <div *ngIf="showDiapo">
+        <div class="col-sm-3">
+            <ul class="infoPhoto">
+                <li>
+                    <button type="button" class="btn btn-primary" (click)="showDiapo=false">QUITTER</button>
+                </li>
+            </ul>
+        </div>
+        <!-- DIAPORAMA -->
+        <div class="col-md-8">
+          <carousel>
+            <slide *ngFor="let photo of photos;let index=i">
+              <img [src]="getUrlPhoto(photo.nomImage)" alt="photo {{i}}" style="display: block; width: 90%;">
+              <div class="carousel-caption d-none d-md-block">
+                <h4>{{photo.nomImage}}</h4>
+              </div>
+            </slide>
+          </carousel>
+        </div>
+      </div>
+      <!-- PHOTO -->
+      <div *ngIf="!showDiapo">
+        <div class="col-sm-3">
+          <ul class="infoPhoto">
+            <li>
+              <h4>Nom de la photo</h4>
+            </li>
+            <li>
+              <label>{{photos[photoIndex].nomImage}}</label>
+            </li>
+            <li>
+              <h4>Date de création</h4>
+            </li>
+            <li>
+              <label>{{photos[photoIndex].dateCreation}}</label>
+            </li>
+            <li>
+              <h4>Numéro de la photo</h4>
+            </li>
+            <li>
+              <label>{{photoIndex+1}}/{{photos.length}}</label>
+            </li>
+            <li class="top10">
+              <button type="button" class="btn btn-primary" [disabled]="photoIndex==0" (click)="photoIndex=photoIndex-1">&lt;&lt;PRECEDENT</button>
+              <span style="margin:10px"></span>
+              <button type="button" class="btn btn-primary" [disabled]="photoIndex==photos.length-1" (click)="photoIndex=photoIndex+1">SUIVANT&gt;&gt;</button>
+            </li>
+            <li class="top10">
+              <button type="button" class="btn btn-danger" (click)="onRemovePhoto()">SUPPRIMER CETTE PHOTO</button>
+            </li>
+            <li style="margin-top:40px">
+              <h4>DIAPORAMA</h4>
+            </li>
+            <li>
+              <img src="assets/images/diaporama.jpg" alt="diaporama" width="60%" (click)="onShowDiapo(true)">
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-9">
+          <img [src]="getUrlPhoto(photos[photoIndex].nomImage)" alt="photo {{photoIndex}}" width="90%">
+        </div>
+      </div>
+    </div>
+  </div>

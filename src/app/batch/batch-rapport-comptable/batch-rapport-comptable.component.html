@@ -1,0 +1,99 @@
+<div class="panel panel-primary text-center">
+    <div class="panel-heading">
+      <h3 class="panel-title">LANCEMENT DE BATCH DE RAPPORTS COMPTABLES</h3>
+    </div>
+    <div class="panel-body">
+     <form [formGroup]="form"> 
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Journaux comptables journaliers 
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" formControlName="date" placeholder="DD/MM/YYYY"
+                  placement="right" bsDatepicker [bsConfig]="bsConfig">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Journaux comptables mensuels</label>
+          <select formControlName="mois" class="form-control"> 
+              <option *ngFor="let i of mois" [value]="i">{{i}}</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Journaux comptables trimestriels</label>
+          <select formControlName="trimestre" class="form-control"> 
+              <option *ngFor="let i of trimestre" [value]="i">{{i}}</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Journaux comptables annuels </label>
+          <input type="text" class="form-control" formControlName="annee">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <button type="button" class="btn btn-primary btn-block" (click)="lancerRapport('j')">
+            Lancer rapport journalier <i class="fas fa-spinner fa-spin" *ngIf="loadingJournalier"></i>
+          </button>
+        </div>
+        <div class="col-sm-3 form-group">
+          <button type="button" class="btn btn-primary btn-block" (click)="lancerRapport('m')">
+            Lancer rapport mensuel <i class="fas fa-spinner fa-spin" *ngIf="loadingMensuel"></i>
+          </button>
+        </div>
+        <div class="col-sm-3 form-group">
+          <button type="button" class="btn btn-primary btn-block" (click)="lancerRapport('t')">
+            Lancer rapport trimestriel <i class="fas fa-spinner fa-spin" *ngIf="loadingTrimestriel"></i>
+          </button>
+        </div>
+        <div class="col-sm-3 form-group">
+          <button type="button" class="btn btn-primary btn-block" (click)="lancerRapport('a')">
+            Lancer rapport annuel <i class="fas fa-spinner fa-spin" *ngIf="loadingAnnuel"></i>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-sm-3 form-group">
+            <label class="control-label">Rapports comptable marché 
+              <span class="glyphicon glyphicon-calendar"></span>
+            </label>
+            <input type="text" class="form-control" formControlName="dateMarche" placeholder="DD/MM/YYYY"
+                    placement="right" bsDatepicker [bsConfig]="bsConfig">
+          </div>
+          <div class="col-sm-3 form-group">
+            <label class="control-label">Liste des emplacements libres non traités</label>
+          </div>
+          <div class="col-sm-6 form-group">
+              <label class="control-label">Historique contrôle [date début / date fin]
+                <span class="glyphicon glyphicon-calendar"></span>
+              </label>
+              <div class="form-group">
+                  <input type="text" class="form-control" formControlName="dateDebutControl" placeholder="DD/MM/YYYY"
+                  placement="left" bsDatepicker [bsConfig]="bsConfig" style="display:inline-block;width:49%;margin-right: 10px">
+                  <input type="text" class="form-control" formControlName="dateFinControl" placeholder="DD/MM/YYYY"
+                  placement="left" bsDatepicker [bsConfig]="bsConfig" style="display:inline-block;width:49%">
+              </div>          
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-sm-3 form-group">
+            <button type="button" class="btn btn-primary btn-block" (click)="lancerRapport('marche')">
+              Lancer rapport marché <i class="fas fa-spinner fa-spin" *ngIf="loadingMarche"></i>
+            </button>
+          </div>
+          <div class="col-sm-3 form-group">
+            <button type="button" class="btn btn-primary btn-block" (click)="showRapport('emplacementLibre')">
+              Générer rapport
+            </button>
+          </div>
+          <div class="col-sm-6 form-group">
+            <button type="button" class="btn btn-primary btn-block" (click)="showRapport('controleOuvrage')">
+              Générer rapport
+            </button>
+            </div>
+        </div>       
+     </form>
+    </div>
+</div>
+<app-info-batch batch="comptable" [data]="retourBatch"></app-info-batch>
+
+

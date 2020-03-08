@@ -1,0 +1,71 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">LISTE DES RUES</h3>
+    <p>
+      Nombre de résultats :{{rues.length}}
+    </p>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Code rivolie</label>
+          <input type="text" class="form-control" name="codeRivoli" ngModel>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Adresse</label>
+          <input type="text" class="form-control" name="adresse" ngModel>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Quartier</label>
+          <select class="form-control" name="quartier" ngModel>
+            <option></option>
+            <option *ngFor="let data of quartiers" value="{{data}}">{{data}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+            <i class="fas fa-search"></i> Rechercher
+            <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          </button>
+        </div>
+        <div class="col-sm-2 text-center pull-right">
+          <a class="btn btn-success" [routerLink]="['../Modification rue']">Ajouter une rue</a>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="rues.length">
+      <hr style="border:1px solid silver">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Ne</th>
+            <th>Adresse</th>
+            <th>Quartier</th>
+            <th>Code rivoli</th>
+            <th>N début</th>
+            <th>N fin</th>
+            <th>Code postal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of rues" routerLinkActive='active'>
+            <td>
+              <a [routerLink]="['../Modification rue',{id:data.codeVoie}]">
+                {{data.codeVoie}}
+              </a>
+            </td>
+            <td>{{data.prefixe}} {{data.liaison}} {{data.nomrue}}</td>
+            <td>{{data.nomquartier}}</td>
+            <td>{{data.codeRivolie}}</td>
+            <td>{{data.debutNumeroRue}}</td>
+            <td>{{data.finNumeroRue}}</td>
+            <td>{{data.codePostal}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

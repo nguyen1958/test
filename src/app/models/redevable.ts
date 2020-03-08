@@ -1,0 +1,55 @@
+
+export class Redevable{
+    numRedevable;
+    nomRedevable:string="";
+    prenom:string="";
+    nomJF:string="";
+    civilite:string="";
+    responsable:string="";
+    natureJuridique:string="";
+    nationalite:string="";
+    dateNaissance:string="";
+    lieuNaissance:string="";
+    siret:string="";
+    siren:string="";
+    codeVoie:string="";
+    numrue:string="";
+    complementNumeroRueRedevable:string="";
+    adresse1:string="";
+    adresse2:string="";
+    adresse3:string="";
+    ville:string="";
+    codePostal:string="";
+    rdCedex:string="false";
+    numTel:string="";
+    numPortable:string="";
+    numFax:string="";
+    email:string="";
+    actif:string="true";
+    informationComplementaire:string="";
+    //remarque
+    commentaire:string="";
+    numeroProfession:string="53";
+    raisonSocialeLiquidateur:string="";
+    nomLiquidateur:string="";
+    prenomLiquidateur:string="";
+    codeVoixLiquidateur:string="";
+    numVoieLiquidateur:string="";
+    complementNumeroRueLiquidateur:string="";
+    adressLiquidateur:string="";
+    complement1AdressLiquidateur:string="";
+    complement2AdressLiquidateur:string="";
+    villeeLiquidateur:string="";
+    codePostaleLiquidateur:string="";
+    cedexLiquidateur:string="";
+    numTelFixeLiquidateur:string="";
+    numTelPortableLiquidateur:string="";
+    numTelFaxeLiquidateur:string="";
+    emailLiquidateur:string="";
+     //extra
+    codeRivolie:string="";  
+    searchVoie:string="";
+    resultat:string="";
+
+    Redevable(){};
+}

@@ -1,0 +1,83 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">HISTORIQUE DES BATCHS</h3>
+    <p>
+      Nombre de résultats : {{historiqueBatchs.length}}
+    </p>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Type de taxe</label>
+          <select class="form-control" name="taxe" ngModel>
+            <option value=""></option>
+            <option *ngFor="let taxe of taxes" [value]="taxe.libelle">{{taxe.libelle}}</option>
+          </select>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Etat du batch</label>
+          <select class="form-control" name="etat" ngModel>
+            <option value="true">Validé</option>
+            <option value="false">Non validé</option>
+          </select>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">A créer factures</label>
+          <select class="form-control" name="acfacture" ngModel>
+            <option value=""></option>
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Rapports d'annulation</label>
+          <select class="form-control" name="acrapport" ngModel>
+            <option value=""></option>
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Date de lancement
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" name="date" ngModel placeholder="DD/MM/YYYY" placement="left" bsDatepicker [bsConfig]="bsConfig">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+            <i class="fas fa-search"></i> Rechercher
+            <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="historiqueBatchs.length">
+      <hr style="border:1px solid silver">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>N° batch</th>
+            <th>Nb factures créées</th>
+            <th>Date exécution</th>
+            <th>Type de taxe</th>
+            <th>Etape</th>
+            <th>validé</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of historiqueBatchs" routerLinkActive='active'>
+            <td>{{data.id}}</td>
+            <td>{{data.nombreDeFactureCree}}</td>
+            <td>{{data.dateExecution}}</td>
+            <td>{{data.typeEmplacement}}</td>
+            <td>{{data.etape}}</td>
+            <td>{{data.valide}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

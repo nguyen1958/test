@@ -1,0 +1,38 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+      <h3 class="panel-title">LISTE DES REDEVABLES</h3>
+      <p>
+          Nombre de résultats :{{redevables?.length}}
+      </p>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>N° redevable</th>
+          <th>Nom redevable</th>
+          <th>Adresse redevable</th>
+          <th>Type emplacement</th>
+          <th>Adresse emplacement</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of redevables" routerLinkActive='active'>
+          <td><a [routerLink]="['../Création d\'un redevable',{numRedevable:data.redevable.numRedevable}]">
+                {{data.redevable.numRedevable}}
+              </a>
+          </td>
+          <td>{{data.redevable.nomRedevable}} {{data.redevable.prenom}}</td>
+          <td>{{data.redevable.numrue}} {{data.redevable.adresse1}}</td>
+          <td>{{data.taxe ? data.taxe.libelle:"-"}}</td>
+          <td *ngIf="!data.emplacement">-</td>
+          <td *ngIf="data.emplacement">
+              <a [routerLink]="['../Modification de l\'emplacement',{numero:data.emplacement.numero}]">
+                {{data.emplacement.numrue+" "+data.emplacement.adresse1+" "+data.emplacement.adresse2+" "+data.emplacement.adresse3}}
+              </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

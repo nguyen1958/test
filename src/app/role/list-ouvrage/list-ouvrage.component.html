@@ -1,0 +1,205 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center">
+      <h3 class="panel-title">LISTE DES OUVRAGES</h3>
+    </span>
+    <div class="alert alert-info">
+      <ul style="font-size: 1.2em">
+        <li>Exercice : <span class="red">{{ anExercice }}</span></li>
+        <li>Redevable :
+          <a class="violet" [routerLink]="['../Création d\'un redevable',{numRedevable:redevable?.numRedevable}]">
+            {{redevable?.civilite}} {{redevable?.nomRedevable}}</a>
+        </li>
+        <li>Type d'emplacement : <span class="red">{{taxe?.libelle}}</span></li>
+        <li>Secteur : <span class="red">{{emplacement?.codeSecteur}}</span></li>
+        <li>Emplacement :
+          <a class="violet" [routerLink]="['../Modification de l\'emplacement',{numero:emplacement?.numero}]">
+            {{emplacement?.raisonSocial+" : "+emplacement?.numrue+" "+emplacement?.adresse1+" "+emplacement?.adresse2+" "+emplacement?.adresse3}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped table-bordered" *ngIf="taxe.libelle=='TLPE'">
+      <thead>
+        <tr>
+          <th>Etat</th>
+          <th>Bareme</th>
+          <th>Libellé article</th>
+          <th>Détail</th>
+          <th>Qté de bareme</th>
+          <th>Type</th>
+          <th>Nbre face/affiche</th>
+          <th>Date début</th>
+          <th>Date fin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of articles" routerLinkActive='active'>
+          <td style="text-align: left" [innerHTML]="getContent('etat',data)"></td>
+          <td>
+            <a [routerLink]="['../Modification bareme',{id:data.bareme.id.code,annee:data.bareme.id.anExercice}]">
+              {{data.bareme.libelle}} {{data.bareme.uniteDeTravail!='FORFAIT'?data.bareme.uniteDeTravail+'/'+ data.bareme.dureeUnitaire:data.bareme.uniteDeTravail}}
+            </a>
+          </td>
+          <td>
+            <a [routerLink]="['../Modification ouvrage',{id:data.article.idArticle}]">
+              {{data.article.nom.startsWith("#")?"Non precise":data.article.nom}}
+            </a>
+          </td>
+          <td [innerHTML]="getContent('detail',data)"></td>
+          <td [innerHTML]="getContent('qtebareme',data)"></td>
+          <td [innerHTML]="getContent('typeOuvrage',data)"></td>
+          <td [innerHTML]="getContent('faceAffiche',data)"></td>
+          <td [innerHTML]="getContent('dateDebut',data)"></td>
+          <td [innerHTML]="getContent('dateFin',data)"></td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-striped table-bordered" *ngIf="taxe.libelle!='TLPE'">
+      <thead>
+        <tr>
+          <th>Etat</th>
+          <th>Bareme</th>
+          <th>Libellé article</th>
+          <th>P.U.Bareme</th>
+          <th>N periode actuel</th>
+          <th>Détail</th>
+          <th>Qté de bareme</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of articles" routerLinkActive='active'>
+          <td style="text-align: left" [innerHTML]="getContent('etat',data)"></td>
+          <td>
+            <a [routerLink]="['../Modification bareme',{id:data.bareme.id.code,annee:data.bareme.id.anExercice}]">
+              {{data.bareme.libelle}} {{data.bareme.uniteDeTravail!='FORFAIT'?data.bareme.uniteDeTravail+'/'+ data.bareme.dureeUnitaire:data.bareme.uniteDeTravail}}
+            </a>
+          </td>
+          <td>
+            <a [routerLink]="['../Modification ouvrage',{id:data.article.idArticle}]">
+              {{data.article.nom.startsWith("#")?"Non precise":data.article.nom}}
+            </a>
+          </td>
+          <td [innerHTML]="getContent('puBareme',data)"></td>
+          <td [innerHTML]="getContent('periode',data)"></td>
+          <td [innerHTML]="getContent('detail',data)"></td>
+          <td [innerHTML]="getContent('qtebareme',data)"></td>
+          <td [innerHTML]="getContent('total',data)"></td>
+        </tr>
+        <tr style="font-size:16px;color:red">
+          <td colspan="6"></td>
+          <td>TOTAL</td>
+          <td>{{totalLigne().toFixed(2)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title"><i class="fas fa-plus-circle"></i> AJOUTER UN OUVRAGE</h3>
+  </div>
+  <div class="panel-body">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-6 form-group" [class.has-error]="formErrors.codeBareme">
+          <label class="control-label">Bareme*</label>
+          <select class="form-control" formControlName="codeBareme" (change)="onChangeBareme()">
+            <option *ngFor="let bareme of baremes" [value]="bareme.id.code">
+              {{bareme.id.code}}----{{bareme.libelle}}----{{bareme.prixUnit.toFixed()}} euros----{{bareme.uniteDeTravail}}/{{bareme.dureeUnitaire}}
+            </option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.codeBareme">{{formErrors.codebareme}}</span>
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.dateDebutAutorisation">
+          <label class="control-label">Date de mise en application*
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" formControlName="dateDebutAutorisation" placeholder="DD/MM/YYYY" bsDatepicker [bsConfig]="bsConfig">
+          <span class="help-block" *ngIf="formErrors.dateDebutAutorisation">{{formErrors.dateDebutAutorisation}}</span>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Date de fin de validité
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" formControlName="dateFinAutorisation" placeholder="DD/MM/YYYY" bsDatepicker [bsConfig]="bsConfig">
+        </div>
+      </div>
+      <!--TAXE TLPE-->
+      <div class="row" *ngIf="taxe.libelle=='TLPE'">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Type*</label>
+          <select class="form-control" formControlName="typeOuvrage">
+            <option value="Normal">Normal</option>
+            <option value="Numerique">Numerique</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.nombreFaceAffiche">
+          <label class="control-label">Nombre d'affiche/face*</label>
+          <input type="text" class="form-control" formControlName="nombreFaceAffiche">
+          <span class="help-block" *ngIf="formErrors.nombreFaceAffiche">{{formErrors.nombreFaceAffiche}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Nom ouvrage</label>
+          <input type="text" class="form-control" formControlName="nom">
+        </div>
+        <div class="col-sm-3 form-group" [class.has-error]="formErrors.quantite_article">
+          <label class="control-label">Quantité*</label>
+          <input type="text" class="form-control" formControlName="quantite_article">
+          <span class="help-block" *ngIf="formErrors.quantite_article">{{formErrors.quantite_article}}</span>
+        </div>
+        <div *ngIf="uniteTravail=='ML' || uniteTravail=='M2'">
+          <div class="col-sm-3 form-group" *ngIf="uniteTravail=='M2'">
+            <label class="control-label">Choix de dimension</label>
+            <div class="top10 left20">
+              <label class="radio-inline">
+                <input type="radio" formControlName="choix" value="lineaire"> Long&Larg
+              </label>
+              <label class="radio-inline">
+                <input type="radio" formControlName="choix" value="surface"> Surface
+              </label>
+            </div>
+          </div>
+          <div class="col-sm-3 form-group" *ngIf="form.get('choix').value=='lineaire'">
+            <div class="col-sm-6" [class.has-error]="formErrors.longueur">
+              <label class="control-label">Longueur*</label>
+              <input type="text" class="form-control" formControlName="longueur">
+              <span class="help-block" *ngIf="formErrors.longueur">{{formErrors.longueur}}</span>
+            </div>
+            <div class="col-sm-6" [class.has-error]="formErrors.largeur" [hidden]="uniteTravail=='ML'">
+              <label class="control-label">Largeur*</label>
+              <input type="text" class="form-control" formControlName="largeur">
+              <span class="help-block" *ngIf="formErrors.largeur">{{formErrors.largeur}}</span>
+            </div>
+          </div>
+          <div class="col-sm-3 form-group" *ngIf="form.get('choix').value!='lineaire'" [hidden]="uniteTravail=='ML'" [class.has-error]="formErrors.surface">
+            <label class="control-label">Surface*</label>
+            <input type="text" class="form-control" formControlName="surface">
+            <span class="help-block" *ngIf="formErrors.surface">{{formErrors.surface}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 form-group">
+          <label class="control-label">Commentaire</label>
+          <textarea class="form-control" rows="2" formControlName="commentaire"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-sm-4 col-sm-offset-4 form-group">
+        <button type="submit" class="btn btn-primary btn-block" (click)="saveArticle(form)" [disabled]="form.invalid">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+<h4 class="text-center">
+  <a [routerLink]="['../Liste des redevables']">Liste des redevables</a>
+</h4>

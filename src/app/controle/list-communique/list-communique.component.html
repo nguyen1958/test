@@ -1,0 +1,87 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">LISTE DES COMMUNIQUES</h3>
+    <p>
+      Nombre de résultats : {{communiques.length}} ouvrages à contrôler
+    </p>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Quartier</label>
+          <select class="form-control" name="quartier" ngModel>
+            <option value=""></option>
+            <option *ngFor="let quartier of quartiers" [value]="quartier">{{quartier}}</option>
+          </select>
+        </div>
+        <div class="col-sm-4 form-group">
+            <label class="control-label">Secteur</label>
+            <select class="form-control" name="secteur" ngModel>
+              <option value=""></option>
+              <option *ngFor="let data of secteurs" [value]="data.valeur">{{data.valeur}}</option>
+            </select>
+          </div> 
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+              <i class="fas fa-search"></i> Rechercher <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+    <div class="top10 text-center" *ngIf="communiques">
+      <div *ngIf="!link1click" role="link1">
+        <a (click)="onLink1(form.value)">Rôle communiqué <i class="fas fa-spinner fa-spin" *ngIf="link1loading"></i></a>
+      </div>
+      <div *ngIf="link1click" role="link1">
+        <a [href]="getUrl1()" target="_blank">RoleCommunique.pdf</a>
+      </div>
+      <div *ngIf="!link2click" role="link2">
+        <a (click)="onLink2(form.value)">Rôle communiqué détaillé <i class="fas fa-spinner fa-spin" *ngIf="link2loading"></i></a>
+      </div>
+      <div *ngIf="link2click" role="link2">
+        <a [href]="getUrl2()" target="_blank">RoleCommuniqueDetaille.pdf</a>
+      </div>
+    </div>
+    <div *ngIf="communiques.length">
+      <hr style="border:1px solid silver">    
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>N° ouvrage</th>
+            <th>Type</th>
+            <th>Adresse à contrôler</th>
+            <th>Quartier</th>
+            <th>Date de contrôle</th>
+            <th>Redevable</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of communiques" routerLinkActive='active'>
+            <td *ngIf="data.article">
+                <a [routerLink]="['../Modification ouvrage',{id:data.article.idArticle}]">{{data.article.idArticle}}</a>
+            </td>
+            <td *ngIf="!data.article">-</td>
+            <td>C</td>
+            <td *ngIf="data.emplacement">
+                <a [routerLink]="['../Modification de l\'emplacement',{numero:data.emplacement.numero}]">
+                  {{data.emplacement.numrue}} {{data.emplacement.adresse1}} {{data.emplacement.adresse2}} {{data.emplacement.adresse3}}
+                </a>
+            </td>
+            <td *ngIf="!data.emplacement">-</td>
+            <td>{{data.emplacement.nomquartier}}</td>
+            <td [innerHTML]="getContent('dateControle',data)"></td>
+            <td *ngIf="data.redevable">
+                <a [routerLink]="['../Création d\'un redevable',{numRedevable:data.redevable.numRedevable}]">
+                  {{data.redevable.numRedevable}}
+                </a>
+            </td>
+            <td *ngIf="!data.redevable">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

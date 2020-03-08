@@ -1,0 +1,112 @@
+<div class="panel panel-primary">
+    <div class="panel-heading text-center">
+        <h3 class="panel-title">RECHERCHE D'UN REDEVABLE</h3>
+        <p>
+            Recherche multi-critères : veuillez remplir un ou plusieurs champs ci-dessous pour obtenir les informations détaillées.
+        </p>
+    </div>
+    <div class="panel-body">
+        <form (ngSubmit)="onSubmit()" #form="ngForm">
+            <div class="row">
+                <div class="col-sm-3 form-group" [class.has-error]="nr.touched && nr.invalid">
+                    <label class="control-label">N° redevable</label>
+                    <input type="text" class="form-control" name="numredevable" pattern="^[0-9]*$" [(ngModel)]="buffer.numredevable" #nr="ngModel">
+                    <span class="help-block" *ngIf="nr.touched && nr.invalid">
+                        Valeur doit être numérique
+                    </span>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Nom/Prénom du redevable</label>
+                    <input type="text" class="form-control" name="nomredevable" [(ngModel)]="buffer.nomredevable">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Profession</label>
+                    <select class="form-control" name="profession" [(ngModel)]="buffer.profession">
+                        <option></option>
+                        <option *ngFor="let prof of professions" value="{{prof.code}}">{{prof.libelle}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Redevable actif</label>
+                    <select class="form-control" name="actif" [(ngModel)]="buffer.actif">
+                        <option></option>
+                        <option value="true">Oui</option>
+                        <option value="false">Non</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 form-group" [class.has-error]="ne.touched && ne.invalid">
+                    <label class="control-label">N° emplacement</label>
+                    <input type="text" class="form-control" name="numemplacement" pattern="^[0-9]*$" [(ngModel)]="buffer.numemplacement" #ne="ngModel">
+                    <span class="help-block" *ngIf="ne.touched && ne.invalid">
+                        Valeur doit être numérique
+                    </span>
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Nom commercial de l'emplacement</label>
+                    <input type="text" class="form-control" name="nomcommercial" [(ngModel)]="buffer.nomcommercial">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Quartier de l'emplacement</label>
+                    <select class="form-control" name="quartier" [(ngModel)]="buffer.quartier">
+                        <option></option>
+                        <option *ngFor="let quartier of quartiers">{{quartier}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <label class="control-label">Etat de l'emplacement</label>
+                    <select class="form-control" name="etat" [(ngModel)]="buffer.etat">
+                        <option value=''>Tous</option>
+                        <option *ngFor="let etat of etats" value="{{etat.valeur}}">{{etat.libelle!=''?etat.libelle:etat.valeur}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">N° dans la rue de l'emplacement</label>
+                    <input type="text" class="form-control" name="numrue" [(ngModel)]="buffer.numrue">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">Nom de la rue de l'emplacement</label>
+                    <input type="text" class="form-control" name="nomrue" [(ngModel)]="buffer.nomrue">
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="control-label">N° secteur de l'emplacement</label>
+                    <select class="form-control" name="secteur" [(ngModel)]="buffer.secteur">
+                        <option></option>
+                        <option *ngFor="let secteur of secteurs" value="{{secteur.valeur}}">{{secteur.valeur}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <label class="control-label">Type de taxe</label>
+                    <select class="form-control" name="taxe" [(ngModel)]="buffer.taxe">
+                        <option></option>
+                        <option *ngFor="let taxe of taxes" value="{{taxe.id.idImputation}}">{{taxe.libelle}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label class="control-label">Type de barème</label>
+                    <select class="form-control" name="bareme" [(ngModel)]="buffer.bareme">
+                        <option></option>
+                        <option *ngFor="let bar of baremes" value="{{bar.code}}">{{bar.libelle}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary btn-block" [disabled]="form.invalid">
+                        <i class="fas fa-search"></i> Rechercher <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="panel-footer text-center" *ngIf="message.length>0">
+        <p class="text-danger">
+            {{message}}
+        </p>
+    </div>
+</div>

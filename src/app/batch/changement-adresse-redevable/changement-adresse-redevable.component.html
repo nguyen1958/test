@@ -1,0 +1,102 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">CHANGEMENT D'ADRESSE DU REDEVABLE</h3>
+  </div>
+  <div class="panel-body">
+    <form [formGroup]="form">
+      <div class="row">
+          <div class="col-sm-2 form-group">
+            <label class="control-label">N° redevable</label>
+            <input type="text" class="form-control" formControlName="numRedevable">
+          </div>
+          <div class="col-sm-2 form-group">
+            <label class="control-label">Nom du redevable</label>
+            <input type="text" class="form-control" formControlName="nomRedevable">
+          </div>
+          <div class="col-sm-3 form-group">
+            <label class="control-label">Adresse du redevable</label>
+            <input type="text" class="form-control" formControlName="adrRedevable">
+          </div>
+          <div class="col-sm-5 form-group" [class.has-error]="formErrors.choixRedevable">
+            <label class="control-label">Redevable qui a changé d'adresse*&nbsp;&nbsp;</label>
+            <button class="search">
+              <span class="glyphicon glyphicon-search" (click)="onSearchRedevable()"></span>
+            </button>
+            <a [routerLink]="['../Création d\'un redevable',{numRedevable:form.value.choixRedevable.numRedevable}]"
+                class="pull-right">
+                Lien vers le redevable {{form.value.choixRedevable?.numRedevable}}
+            </a>
+            <select class="form-control" formControlName="choixRedevable" (change)="redevableSelected()">
+                <option *ngIf="redevables.length==0" value="">-- Résultat non trouvé --</option>
+                <option *ngFor="let redevable of redevables" [ngValue]="redevable">
+                  {{redevable.numRedevable}} --- {{redevable.prenom}} {{redevable.nomRedevable}} --- {{redevable.numrue}} {{redevable.adresse1}} {{redevable.adresse2}} {{redevable.adresse3}}
+                </option>
+            </select>
+            <span class="help-block" *ngIf="formErrors.choixEmplacement">{{formErrors.choixEmplacement}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-2 form-group" [class.has-error]="formErrors.numVoie">
+            <label class="control-label">Numéro voie*</label>
+            <input type="text" class="form-control" formControlName="numVoie">
+            <span class="help-block" *ngIf="formErrors.choixEmplacement">{{formErrors.choixEmplacement}}</span>
+          </div>
+          <div class="col-sm-2 form-group">
+            <label class="control-label">Code voie&nbsp;&nbsp;</label>
+            <button class="search">
+              <span class="glyphicon glyphicon-search" (click)="onSearchRueBy('code')"></span>
+            </button>
+            <input type="text" class="form-control" formControlName="codeVoie">
+          </div>
+          <div class="col-sm-3 form-group">
+            <label class="control-label">Recherche par voie&nbsp;&nbsp;</label>
+            <button class="search">
+              <span class="glyphicon glyphicon-search" (click)="onSearchRueBy('nom')"></span>
+            </button>
+            <input type="text" class="form-control" formControlName="nomVoie">
+          </div>
+          <div class="col-sm-5 form-group" [class.has-error]="formErrors.choixAdresse">
+            <label class="control-label">Choix d'adresse*&nbsp;&nbsp;</label>
+            <select class="form-control" formControlName="choixAdresse" (change)="rueSelected()">
+              <option *ngIf="rues.length==0" value="">-- Résultat non trouvé --</option>
+              <option *ngFor="let rue of rues" [ngValue]="rue">
+                {{rue.codeVoie}} --- {{rue.prefixe}} {{rue.liaison}} {{rue.nomrue}} --- {{rue.nomquartier}} --- {{rue.codePostal}}
+              </option>
+            </select>
+            <span class="help-block" *ngIf="formErrors.choixEmplacement">{{formErrors.choixEmplacement}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 form-group">
+            <label class="control-label">Adresse complémentaire</label>
+            <input type="text" class="form-control" formControlName="adresse2">
+          </div>
+          <div class="col-sm-4 form-group">
+            <label class="control-label">Adresse complémentaire</label>
+            <input type="text" class="form-control" formControlName="adresse3">
+          </div>
+          <div class="col-sm-4 form-group">
+            <div class="col-sm-5 form-group" [class.has-error]="formErrors.ville">
+              <label class="control-label">Ville*</label>
+              <input type="text" class="form-control" formControlName="ville" required>
+              <span class="help-block" *ngIf="formErrors.ville">{{formErrors.ville}}</span>
+            </div>
+            <div class="col-sm-5 form-group" [class.has-error]="formErrors.codePostal">
+              <label class="control-label">Code postal*</label>
+              <input type="text" class="form-control" formControlName="codePostal" required>
+              <span class="help-block" *ngIf="formErrors.codePostal">{{formErrors.codePostal}}</span>
+            </div>
+            <div class="col-sm-2 form-group">
+              <label class="text-center" style="width: 100%">Cedex</label>
+              <input type="checkbox" class="form-control" formControlName="cedex">
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-block" [disabled]="form.invalid" (click)="validerChangementAdresse()">
+          Valider le changement d'adresse du redevable {{form.value.choixRedevable?.numRedevable}}
+        </button>
+    </form>
+  </div>
+</div>
+
+

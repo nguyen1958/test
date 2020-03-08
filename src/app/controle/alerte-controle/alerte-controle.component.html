@@ -1,0 +1,109 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">ALERTE</h3>
+    <p>
+      Nombre de résultats : {{alertes.length}}
+    </p>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Type de taxe</label>
+          <select class="form-control" name="typeTaxe" ngModel>
+            <option value=""></option>
+            <option *ngFor="let typeTaxe of typeTaxes" [value]="typeTaxe">{{typeTaxe}}</option>
+          </select>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Sur/sans dossier</label>
+          <select class="form-control" name="lieDossier" ngModel>
+            <option value=""></option>
+            <option *ngFor="let lieDossier of lieDossiers" [value]="lieDossier">{{lieDossier}}</option>
+          </select>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Date de création
+            <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" name="date" ngModel placeholder="DD/MM/YYYY" placement="left" bsDatepicker [bsConfig]="bsConfig">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Nom du contrôleur</label>
+          <input type="text" class="form-control" name="nomControleur" ngModel>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Nom du redevable</label>
+          <input type="text" class="form-control" name="nomRedevable" ngModel>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Etat de l'alerte</label>
+          <select class="form-control" name="etat" [ngModel]="'EN COURS'">
+            <option value=""></option>
+            <option *ngFor="let etat of etats" [value]="etat">{{etat}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Numéro de la rue</label>
+          <input type="text" class="form-control" name="numRue" ngModel>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Nom de la rue</label>
+          <input type="text" class="form-control" name="nomRue" ngModel>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Quartier</label>
+          <select class="form-control" name="quartier" ngModel>
+            <option value=""></option>
+            <option *ngFor="let quartier of quartiers" [value]="quartier">{{quartier}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+            <i class="fas fa-search"></i> Rechercher
+            <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="alertes.length">
+      <hr style="border:1px solid silver">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>N° alerte</th>
+            <th>Etat</th>
+            <th>Date de création</th>
+            <th>Date de fin</th>
+            <th>Type de taxe</th>
+            <th>Nom redevable</th>
+            <th>Quartier</th>
+            <th>Adresse</th>
+            <th>N° ouvrage</th>
+            <th>Contrôleur</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of alertes" routerLinkActive='active'>
+            <td>{{data.alerte.id}}</td>
+            <td>{{data.alerte.etatAlerte}}</td>
+            <td>{{data.alerte.date_creation}}</td>
+            <td>{{data.alerte.dateFinAlerte}}</td>
+            <td>{{data.taxe.libelle}}</td>
+            <td [innerHTML]="getContent('redevable',data)"></td>
+            <td>{{data.alerte.quartier}}</td>
+            <td>{{data.emplacement?data.emplacement.numRue+" "+data.emplacement.adresse1+" "+data.emplacement.adresse2+" "+data.emplacement.adresse3:"-"}}</td>
+            <td [innerHTML]="getContent('article',data)"></td>
+            <td>{{data.controleur.nom+" "+data.controleur.prenom}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

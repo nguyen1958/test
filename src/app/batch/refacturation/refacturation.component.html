@@ -1,0 +1,14 @@
+<table class="table table-bordered">
+  <th class="text-center">
+      <a (click)="action='rechercher'">
+        <h4>Rechercher</h4>
+      </a>
+  </th>
+  <th class="text-center">
+      <a (click)="action='refacturer'">
+        <h4>Refacturer</h4>
+      </a>
+  </th>
+</table>
+<app-recherche-refacturation *ngIf="action=='rechercher'"></app-recherche-refacturation>
+<app-creer-refacturation *ngIf="action=='refacturer'"></app-creer-refacturation>

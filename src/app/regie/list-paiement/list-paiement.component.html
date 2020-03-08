@@ -1,0 +1,47 @@
+<div class="panel panel-primary text-center" *ngIf="payements.length>0">
+  <div class="panel-heading">
+      <h3 class="panel-title">LISTE DES PAIEMENTS</h3>
+      <p>
+          Nombre de résultats :{{payements?.length}}
+      </p>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>N° paiement</th>
+          <th>Etat</th>
+          <th>N° redevable</th>
+          <th>Date de paiement</th>
+          <th>Type de paiement</th>
+          <th>Montant de paiement</th>
+          <th>Nombre facures payées</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of payements" routerLinkActive='active'>
+          <td>
+            <!-- autre paiement-->
+            <a [routerLink]="['../Information paiement',{id:data.payement.id}]" *ngIf="data.payement.nombreDeFacturePayee>0">
+              {{data.payement.id}}
+            </a>
+            <!--paiement marché-->
+            <a [routerLink]="['../Saisie de paiement marché',{id:data.payement.id}]" *ngIf="data.payement.nombreDeFacturePayee==0">
+              {{data.payement.id}}
+            </a>
+          </td>
+          <td>{{data.payement.etat}}</td>
+          <td> 
+              <a [routerLink]="['../Création d\'un redevable',{numRedevable:data.facture.idClient}]">
+                {{data.facture.idClient}}
+              </a>
+          </td>
+          <td>{{data.payement.datePayement}}</td>
+          <td>{{data.typePayement.typepayement}}</td>
+          <td>{{data.payement.montantPayement}}</td>
+          <td>{{data.payement.nombreDeFacturePayee}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

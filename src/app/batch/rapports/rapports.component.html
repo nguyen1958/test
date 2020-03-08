@@ -1,0 +1,131 @@
+<table class="table table-bordered">
+  <th class="text-center">
+      <a (click)="action='rechercher'"><h4>Rechercher un rapport</h4></a>
+  </th>
+  <th class="text-center">
+      <a (click)="action='lancerBatch'"><h4>Lancer un batch</h4> </a>
+  </th>
+</table>
+<!-- Rechercher un rapport-->
+<div class="panel panel-primary" *ngIf="action=='rechercher'">
+    <div class="panel-heading">
+      <h3 class="panel-title">RECHERCHER UN BATCH</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row text-center">
+          <div class="col-sm-6 form-group">
+              <label class="control-label">Rapport de suivi de facturation</label>
+              <button type="button" class="btn btn-primary btn-block" 
+                      (click)="rechercherSF()">
+                  <i class="fas fa-search"></i> Rechercher <i class="fas fa-spinner fa-spin" *ngIf="loadingSF"></i>
+              </button>
+          </div>
+          <div class="col-sm-6 form-group">
+              <label class="control-label">Rapport de changement d'adresse des redevables</label>
+              <button type="button" class="btn btn-primary btn-block" 
+                      (click)="rechercherCAR()">
+                  <i class="fas fa-search"></i> Rechercher <i class="fas fa-spinner fa-spin" *ngIf="loadingCAR"></i>
+              </button>
+          </div>
+      </div>
+      <table class="table table-striped table-bordered text-center" *ngIf="resultatDe=='suiviFacturation'">
+          <thead>
+            <tr>
+              <th>N° Batch</th>
+              <th>Type de taxe</th>
+              <th>Lien vers le fichier</th>
+              <th>Date de création</th>
+              <th>Date début</th>
+              <th>Date fin</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of resultatSF" routerLinkActive='active'>
+                <td>{{data.id}}</td>
+                <td>{{data.typeTaxe}}</td>
+                <td *ngIf="!data.aEditerFichier || data.aEditerFichier=='false'">-</td>
+                <td *ngIf="data.aEditerFichier=='true'">
+                  <a [href]="getUrl('RSF',data.id)" target="_blank">
+                    <img src="assets/images/pdf.png" height="20px"> {{'RSF_'+data.id+'.pdf'}}
+                  </a>
+                </td>
+                <td>{{data.dateCreation}}</td>
+                <td>{{data.dateDebut}}</td>
+                <td>{{data.dateFin}}</td>
+            </tr>
+          </tbody>
+      </table>
+      <table class="table table-striped table-bordered text-center" *ngIf="resultatDe=='changementAdresse'">
+          <thead>
+            <tr>
+              <th>N° Batch</th>
+              <th>Lien vers le fichier</th>
+              <th>Date de création</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of resultatCAR" routerLinkActive='active'>
+                <td>{{data.id}}</td>
+                <td *ngIf="!data.fichierCree || data.fichierCree=='false'">-</td>
+                <td *ngIf="data.fichierCree=='true'">
+                  <a [href]="getUrl('RCAR',data.id)" target="_blank">
+                      <img src="assets/images/pdf.png" height="20px"> {{'RCAR_'+data.id+'.pdf'}}
+                  </a>
+                </td>
+                <td>{{data.dateCreation}}</td>       
+            </tr>
+          </tbody>
+      </table>
+    </div>
+</div>
+<!-- Lancer un batch-->
+<div class="panel panel-primary" *ngIf="action=='lancerBatch'">
+    <div class="panel-heading">
+      <h3 class="panel-title">LANCER UN BATCH</h3>
+    </div>
+    <div class="panel-body">
+      <h4 class="blue">RAPPORT DE SUIVI DE FACTURATION</h4>
+      <form [formGroup]="form">
+        <div class="row">
+          <div class="col-sm-2 form-group" [class.has-error]="formErrors.debutPeriode">
+            <label class="control-label">Début de période*
+              <span class="glyphicon glyphicon-calendar"></span>
+            </label>
+            <input type="text" class="form-control" formControlName="debutPeriode" placeholder="DD/MM/YYYY" 
+                    placement="right" bsDatepicker [bsConfig]="bsConfig">
+            <span class="help-block" *ngIf="formErrors.debutPeriode">{{formErrors.debutPeriode}}</span>
+          </div>
+          <div class="col-sm-2 form-group" [class.has-error]="formErrors.finPeriode">
+            <label class="control-label">Fin de période*
+              <span class="glyphicon glyphicon-calendar"></span>
+            </label>
+            <input type="text" class="form-control" formControlName="finPeriode" placeholder="DD/MM/YYYY" 
+                    placement="right" bsDatepicker [bsConfig]="bsConfig">
+            <span class="help-block" *ngIf="formErrors.finPeriode">{{formErrors.finPeriode}}</span>
+          </div>
+          <div class="col-sm-4 form-group" [class.has-error]="formErrors.typeTaxe">
+            <label class="control-label">Type de taxe</label>
+            <select class="form-control" formControlName="typeTaxe">
+              <option value=""></option>
+              <option *ngFor="let taxe of taxes" [ngValue]="taxe.libelle">{{taxe.libelle}}</option>
+            </select>
+            <span class="help-block" *ngIf="formErrors.typeTaxe">{{formErrors.typeTaxe}}</span>
+          </div>
+        </div>
+      </form>
+      <button type="button" class="btn btn-primary btn-block"
+              (click)="lancerBatchSuiviFacturation()" [disabled]="form.invalid">
+        <i class="fas fa-search"></i> Lancer le batch <i class="fas fa-spinner fa-spin" *ngIf="loadingSF"></i>
+      </button>
+      <app-info-batch batch="suiviFacturation" [data]="retourSuiviFacturation"></app-info-batch>
+    </div>
+<!--Partie Changement adresse des redevables-->
+    <div class="panel-body">
+      <h4 class="blue">RAPPORT DE CHANGEMENT D'ADRESSE DES REDEVABLES</h4>
+      <button type="button" class="btn btn-primary btn-block" (click)="lancerBatchChangementAdresse()">
+        <i class="fas fa-search"></i> Lancer le batch <i class="fas fa-spinner fa-spin" *ngIf="loadingCAR"></i>
+      </button>
+      <app-info-batch batch="changementAdresse" [data]="retourChangementAdresse"></app-info-batch>
+    </div>
+</div>
+

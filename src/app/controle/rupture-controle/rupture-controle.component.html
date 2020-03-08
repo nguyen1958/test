@@ -1,0 +1,62 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">RUPTURE DES CONTROLES</h3>
+    <p>
+      Nombre de résultats : {{ruptures.length}}
+    </p>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4 form-group">
+          <label class="control-label">Quartier</label>
+          <select class="form-control" name="quartier" ngModel>
+            <option value=""></option>
+            <option *ngFor="let quartier of quartiers" [value]="quartier">{{quartier}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+              <i class="fas fa-search"></i> Rechercher <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="ruptures.length">
+      <hr style="border:1px solid silver">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Ouvrage</th>
+            <th>Adresse</th>
+            <th>N dernière periode facturée</th>
+            <th>N periode actuelle</th>
+            <th>Date dernier contrôle</th>
+            <th>Date prochain contrôle</th>
+            <th>Ne plus facturer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of ruptures;let i=index" routerLinkActive='active'>
+            <td>
+              <a [routerLink]="['../Modification ouvrage',{id:data.article.idArticle}]">
+                {{data.article.nom.startsWith("#")?"Non precise":data.article.nom}}
+              </a>
+            <td>
+              <a [routerLink]="['../Modification de l\'emplacement',{numero:data.emplacement.numero}]">
+                {{data.emplacement.numrue+" "+data.emplacement.adresse1+" "+data.emplacement.adresse2+" "+data.emplacement.adresse3}}
+              </a>
+            </td>
+            <td>{{data.article.dernierePeriodeFacture}}</td>
+            <td>{{data.article.numeroPeriodeActuelle}}</td>
+            <td>{{data.article.dateDernierControl}}</td>
+            <td>{{data.article.dateProchainControl}}</td>
+            <td><input type="checkbox" (change)="onCheck($event,i,data.article.idArticle)"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

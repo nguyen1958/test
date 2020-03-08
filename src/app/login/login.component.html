@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="box col-md-4 col-md-offset-4">     
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <img src="assets/images/user.png" alt="login">
+          <h3 class="panel-title">Authentification</h3>
+        </div>
+        <div class="panel-body">
+          <div *ngIf="errLogin" class="error alert-danger">
+            Identifiant ou mot de passe incorrect !
+          </div>
+          <form #loginForm="ngForm" (ngSubmit)="envoyer(loginForm.value)">
+              <span>Identifiant</span>
+              <input type="text" ngModel name="identifiant"/>
+              <span>Mot de passe</span>
+              <input type="password" ngModel name="password"/>
+              <div class="flex">
+                <button class="btn btn-primary" type="submit">Envoyer</button>
+              </div>
+            </form>
+        </div>
+    </div>
+    <span class="copy">Copyright &copy; Analogon sarl</span>     
+  </div>
+</div>
+

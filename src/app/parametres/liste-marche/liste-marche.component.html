@@ -1,0 +1,54 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">LISTE DES MARCHES</h3>
+    <p>
+      Nombre de résultats :{{marches.length}}
+    </p>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Code</label>
+          <input type="text" class="form-control" name="code" ngModel>
+        </div>
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Libellé</label>
+          <input type="text" class="form-control" name="libelle" ngModel>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-2">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+            <i class="fas fa-search"></i> Rechercher
+            <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          </button>
+        </div>
+        <div class="col-sm-2 text-center pull-right">
+          <a class="btn btn-success" [routerLink]="['../Modification marche']">
+            <i class="fas fa-plus"></i> Ajouter un marché
+          </a>
+        </div>
+      </div>
+    </form>
+    <hr style="border:1px solid silver">
+    <table class="table table-striped table-bordered" *ngIf="marches.length">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Libellé</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of marches" routerLinkActive='active'>
+          <td>
+            <a [routerLink]="['../Modification marche',{id:data.idMarche}]">
+              {{data.idMarche}}
+            </a>
+          </td>
+          <td>{{data.nomMarche}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

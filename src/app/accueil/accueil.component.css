@@ -1,0 +1,18 @@
+.wrapper{
+    font-family: Arial, sans-serif;
+    margin-top:10em;
+}
+.box1{
+    position:relative;
+    left:35%;
+    width:471px;
+    height:275px;
+    background: url(../../assets/images/bienvenue.gif);
+    padding:70px 20px;
+}
+
+.content{
+    color:black;
+    padding:10px;
+    border:1px solid #c0c0c0;
+}

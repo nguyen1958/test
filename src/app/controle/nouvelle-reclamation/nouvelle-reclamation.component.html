@@ -1,0 +1,107 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center">
+      <h3 class="panel-title">{{title|uppercase}}</h3>
+    </span>
+  </div>
+  <div class="panel-body">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Numéro de la facture*&nbsp;&nbsp;</label>
+          <button class="search" (click)="rechercher('numero')">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <input type="text" class="form-control" formControlName="numeroFacture">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Numéro du titre ET Année du titre&nbsp;&nbsp;</label>
+          <button class="search" (click)="rechercher('titreAnnee')">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <input type="text" class="form-control" formControlName="numeroTitre" placeholder="numéro du titre">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">&nbsp;</label>
+          <input type="text" class="form-control" formControlName="anneeTitre" placeholder="année du titre">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Date de réclamation*
+              <span class="glyphicon glyphicon-calendar"></span>
+          </label>
+          <input type="text" class="form-control" formControlName="dateReclamation" placeholder="DD/MM/YYYY" placement="left" bsDatepicker [bsConfig]="bsConfig">
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Type de taxe</label>
+          <input type="text" class="form-control" formControlName="typeTaxe" readonly>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Type de réception de la réclamation*</label>
+          <select class="form-control" formControlName="typeReception">
+            <option *ngFor="let type of typeReceptions" [value]="type.valeur">{{type.valeur}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Lien vers la facture</label>
+          <div *ngIf="form.value.idFacture">
+              <a class="violet" [href]="getUrlFacture()">{{facture?.numeroFacture}}.pdf </a>
+              ...+
+              <a [routerLink]="['../Information facture',{id:facture.idFacture}]"> D'info sur cette facture</a> 
+          </div>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Lien vers le redevable</label>
+          <div *ngIf="form.value.idClient">
+              <a [routerLink]="['../Création d\'un redevable',{numRedevable:redevable.numRedevable}]">
+                {{redevable.nomRedevable}} {{redevable.prenom}}
+              </a>
+          </div>
+        </div>
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Nature de la réclamation*</label>
+          <select class="form-control" formControlName="natureReclamation">
+              <option *ngFor="let nature of natureReclamations" [value]="nature.valeur">{{nature.valeur}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Texte de la réclamation*</label>
+          <textarea class="form-control" formControlName="textReclamation" rows="4">
+
+            </textarea>
+        </div>
+        <div class="col-sm-6 form-group">
+          <label class="control-label">Liste des ouvrages liés à la réclamation*</label>
+          <div class="alert alert-info" style="height: 111px;overflow: auto">
+            <div formArrayName="articles" *ngFor="let article of form.get('articles')['controls'];let i=index">             
+                <label  [formGroupName]="i" class="checkbox-inline">
+                    <input type="checkbox" formControlName="selected"> {{article.get('libelle').value}}
+                </label>       
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 form-group">
+        <button type="button" class="btn btn-primary btn-block" [disabled]="form.invalid" (click)="onValider()">Valider</button>
+      </div>
+      <div class="col-sm-3 form-group">
+          <button type="button" class="btn btn-success" (click)="onTest()">Test</button>
+        </div>
+    </div>
+  </div>
+</div>
+<h4 class="text-center">
+  <a [routerLink]="['../Réclamation']">Liste des réclamation</a>
+</h4>
+<div>
+  {{form.value|json}}
+</div>

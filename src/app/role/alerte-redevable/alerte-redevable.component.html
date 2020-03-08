@@ -1,0 +1,130 @@
+<div class="panel panel-primary">
+    <div class="panel-heading text-center">
+        <h3 class="panel-title">Reherche des alertes</h3>
+        <p style="font-size:0.9em">
+            Recherche multi-critères : veuillez remplir un ou plusieurs champs ci-dessous pour obtenir les informations détaillées.
+        </p>
+    </div>
+    <div class="panel-body">
+        <form (ngSubmit)="rechercher()" #form="ngForm">
+            <div class="row">
+                <div class="col-sm-4 form-group">
+                    <label class="control-label">N° secteur de l'emplacement</label>
+                    <select class="form-control" name="secteur" [(ngModel)]="buffer.secteur">
+                        <option></option>
+                        <option *ngFor="let secteur of secteurs" value="{{secteur.valeur}}">{{secteur.valeur}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label class="control-label">N° dans la rue de l'emplacement</label>
+                    <input type="text" class="form-control" name="numrue" [(ngModel)]="buffer.numrue">
+                </div>
+                <div class="col-sm-4 from-group">
+                    <label class="control-label">Nom de la rue de l'emplacement</label>
+                    <input type="text" class="form-control" name="nomrue" [(ngModel)]="buffer.nomrue">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 form-group">
+                    <label class="control-label">Type de taxe</label>
+                    <select class="form-control" name="taxe" [(ngModel)]="buffer.taxe">
+                        <option></option>
+                        <option *ngFor="let taxe of taxes" value="{{taxe.id.idImputation}}">{{taxe.libelle}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label class="control-label">Date du contôle</label>
+                    <input type="text" class="form-control" name="dateControl" [(ngModel)]="buffer.dateControl" bsDatepicker [bsConfig]="bsConfig">
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label class="control-label">Contrôleur</label>
+                    <select class="form-control" name="controleur" [(ngModel)]="buffer.controleur">
+                        <option></option>
+                        <option *ngFor="let controleur of controleurs" value="{{controleur.numeroUser}}">{{controleur.nom}} {{controleur.prenom}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-4">
+                    <button type="submit" class="btn btn-primary btn-block" [disabled]="form.invalid">
+                        <i class="fas fa-search"></i> Rechercher <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="panel panel-primary text-center">
+    <div class="panel-heading">
+        <h3 class="panel-title">Liste des emplacements libres</h3>
+        <p style="font-size:0.9em">
+            Nombre de résultats :{{emplacementsLibre.length}}
+        </p>
+    </div>
+    <div class="panel-body" *ngIf="emplacementsLibre.length>0">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Transfert d'emplacement</th>
+                    <th>Créé le</th>
+                    <th>Type emplacement</th>
+                    <th>Adresse emplacement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of emplacementsLibre" routerLinkActive='active'>
+                    <td>
+                        <a [routerLink]="['../Transfert emplacement',{numero:data.emplacement.numero}]">
+                            {{data.emplacement.numero}}
+                        </a>
+                    </td>
+                    <td>{{data.historique.dateControle}}</td>
+                    <td>{{data.taxe ? data.taxe.libelle:"-"}}</td>
+                    <td>
+                        <a [routerLink]="['../Modification de l\'emplacement',{numero:data.emplacement.numero}]">
+                            {{data.emplacement.numrue+" "+data.emplacement.adresse1+" "+data.emplacement.adresse2+" "+data.emplacement.adresse3}}
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="panel panel-primary text-center">
+    <div class="panel-heading">
+        <h3 class="panel-title">Liste des emplacements à modifier</h3>
+        <p style="font-size:0.9em">
+            Nombre de résultats :{{emplacementsAModifier.length}}
+        </p>
+    </div>
+    <div class="panel-body" *ngIf="emplacementsAModifier.length>0">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Transfert d'emplacement</th>
+                    <th>Redevable</th>
+                    <th>Modifié le</th>
+                    <th>Type emplacement</th>
+                    <th>Adresse emplacement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of emplacementsAModifier">
+                    <td>
+                        <a [routerLink]="['../Transfert emplacement',{numero:data.emplacement.numero}]">
+                            {{data.emplacement.numero}}
+                        </a>
+                    </td>
+                    <td>{{data.redevable.nomRedevable}} {{data.redevable.prenom}}</td>
+                    <td>{{data.historique.dateControle}}</td>
+                    <td>{{data.taxe ? data.taxe.libelle:"-"}}</td>
+                    <td>
+                        <a [routerLink]="['../Modification de l\'emplacement',{numero:data.emplacement.numero}]">
+                            {{data.emplacement.numrue+" "+data.emplacement.adresse1+" "+data.emplacement.adresse2+" "+data.emplacement.adresse3}}
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

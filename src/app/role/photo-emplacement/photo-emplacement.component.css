@@ -1,0 +1,16 @@
+
+ul.infoPhoto{
+    text-align: center;
+}
+
+ul.infoPhoto li{
+    list-style-type: none;
+}
+
+.infoPhoto h4{
+    text-decoration-line: underline;
+}
+
+.infoPhoto li:hover img{
+    cursor:pointer;
+}

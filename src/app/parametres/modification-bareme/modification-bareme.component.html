@@ -1,0 +1,189 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center">
+      <h3 class="panel-title">{{title|uppercase}}</h3>
+      <p *ngIf="nbArticles>0">Il y a des ouvrages liées!!</p>
+    </span>
+  </div>
+  <div class="panel-body">
+    <form [formGroup]="form">
+      <div class="row">
+        <div formGroupName="id">
+          <div class="col-sm-2 form-group">
+            <label class="control-label">Année exercice*</label>
+            <input type="text" class="form-control" formControlName="anExercice" readonly>
+          </div>
+        </div>
+        <div class="col-sm-5 form-group" [class.has-error]="formErrors.taxe">
+          <label class="control-label">Type de taxe*</label>
+          <select class="form-control" formControlName="idImputation" (change)="onChangeTaxe()">
+            <option *ngFor="let data of taxes" [value]="data.id.idImputation">
+              {{data.id.idImputation}}---{{data.libelle}}
+            </option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.taxe">{{formErrors.taxe}}</span>
+        </div>
+        <div class="col-sm-5 form-group">
+          <label class="control-label">Libellé</label>
+          <input type="text" class="form-control" formControlName="libelle">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Section</label>
+          <input type="text" class="form-control" formControlName="sectionBareme">
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Imputation</label>
+          <input type="text" class="form-control" formControlName="imputationBareme">
+        </div>
+        <div class="col-sm-2 form-group" [class.has-error]="formErrors.uniteDeTravail">
+          <label class="control-label">Unité de travail*</label>
+          <select class="form-control" formControlName="uniteDeTravail">
+            <option *ngFor="let data of uniteTravails" value="{{data.valeur}}">{{data.valeur}}</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.uniteDeTravail">{{formErrors.uniteDeTravail}}</span>
+        </div>
+        <div class="col-sm-2 form-group" [class.has-error]="formErrors.dureeUnitaire">
+          <label class="control-label">Unité de temps*</label>
+          <select class="form-control" formControlName="dureeUnitaire">
+            <option *ngFor="let data of uniteTemps" value="{{data.valeur}}">{{data.valeur}}</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.dureeUnitaire">{{formErrors.dureeUnitaire}}</span>
+        </div>
+        <div class="col-sm-2 form-group" [class.has-error]="formErrors.typeArrondi">
+          <label class="control-label">Type d'arrondi*</label>
+          <select class="form-control" formControlName="typeArrondi">
+            <option *ngFor="let data of typeArrondis" value="{{data.valeur}}">{{data.valeur}}</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.typeArrondi">{{formErrors.typeArrondi}}</span>
+        </div>
+        <div class="col-sm-2 form-group" [class.has-error]="formErrors.prorata">
+          <label class="control-label">Utiliser prorata*</label>
+          <select class="form-control" formControlName="prorata">
+            <option value="true">OUI</option>
+            <option value="false">NON</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.prorata">{{formErrors.prorata}}</span>
+        </div>
+      </div>
+      <div *ngIf="taxe && taxe.libelle!='TLPE'">
+        <div class="row">
+          <div class="col-sm-2 form-group" [class.has-error]="formErrors.prixUnit">
+            <label class="control-label">Prix unitaire*</label>
+            <input type="text" class="form-control" formControlName="prixUnit" (blur)="onTouch()">
+            <span class="help-block" *ngIf="formErrors.prixUnit">{{formErrors.prixUnit}}</span>
+          </div>
+          <div class="col-sm-2 form-group" [class.has-error]="formErrors.periodicite">
+            <label class="control-label">Périodicité*</label>
+            <select class="form-control" formControlName="periodicite">
+              <option value="true">OUI</option>
+              <option value="false">NON</option>
+            </select>
+            <span class="help-block" *ngIf="formErrors.periodicite">{{formErrors.periodicite}}</span>
+          </div>
+        </div>
+        <div class="row" *ngIf="form.value.periodicite==='true'">
+          <div class="col-sm-2 col-sm-offset-2 form-group" [class.has-error]="formErrors.prixPeriode1">
+            <label class="control-label">Prix période1</label>
+            <input type="text" class="form-control" formControlName="prixPeriode1">
+            <span class="help-block" *ngIf="formErrors.prixPeriode1">{{formErrors.prixPeriode1}}</span>
+          </div>
+          <div class="col-sm-2 form-group" [class.has-error]="formErrors.prixPeriode2">
+            <label class="control-label">Prix période2</label>
+            <input type="text" class="form-control" formControlName="prixPeriode2">
+            <span class="help-block" *ngIf="formErrors.prixPeriode2">{{formErrors.prixPeriode2}}</span>
+          </div>
+          <div class="col-sm-2 form-group" [class.has-error]="formErrors.prixPeriode3">
+            <label class="control-label">Prix période3</label>
+            <input type="text" class="form-control" formControlName="prixPeriode3">
+            <span class="help-block" *ngIf="formErrors.prixPeriode3">{{formErrors.prixPeriode3}}</span>
+          </div>
+          <div class="col-sm-2 form-group" [class.has-error]="formErrors.prixPeriode4">
+            <label class="control-label">Prix période4</label>
+            <input type="text" class="form-control" formControlName="prixPeriode4">
+            <span class="help-block" *ngIf="formErrors.prixPeriode4">{{formErrors.prixPeriode4}}</span>
+          </div>
+          <div class="col-sm-2 form-group" [class.has-error]="formErrors.prixPeriode5">
+            <label class="control-label">Prix période5</label>
+            <input type="text" class="form-control" formControlName="prixPeriode5">
+            <span class="help-block" *ngIf="formErrors.prixPeriode5">{{formErrors.prixPeriode5}}</span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="taxe && taxe.libelle=='TLPE'">
+        <div class="row">
+          <div class="col-sm-2 form-group">
+            <label class="control-label">Coefficient type TLPE</label>
+            <input type="text" class="form-control" formControlName="coefficientNumerique">
+          </div>
+          <div class="col-sm-10 form-group">
+            <label class="control-label">Tranche de prix</label>
+            <button class="form-control btn btn-primary" (click)="addTranchePrix()">
+                <i class="fas fa-plus-circle"></i> Ajouter une nouvelle tranche de prix
+            </button>
+          </div>
+        </div>
+        <div formArrayName="tranchePrix" *ngFor="let tp of form.get('tranchePrix').controls;let i=index">
+          <hr *ngIf="i>0">
+          <div class="row" [formGroupName]="i">
+            <div class="col-sm-2 form-group"></div>
+            <div class="col-sm-3 form-group" [class.has-error]="tp.get('surfaceMin').invalid && 
+                                                                tp.get('surfaceMin').touched">
+              <label class="control-label">Surface Min en M² (inclus)*</label>
+              <input type="text" class="form-control" formControlName="surfaceMin">
+              <span class="help-block" *ngIf="tp.get('surfaceMin').invalid && 
+                                              tp.get('surfaceMin').touched">
+                Valeur incorrecte
+              </span>
+            </div>
+            <div class="col-sm-3 form-group" [class.has-error]="tp.get('surfaceMax').invalid && 
+                                                                tp.get('surfaceMax').touched">
+              <label class="control-label">Surface Max en M²(inclus)*</label>
+              <input type="text" class="form-control" formControlName="surfaceMax">
+              <span class="help-block" *ngIf="tp.get('surfaceMax').invalid && 
+                                              tp.get('surfaceMax').touched">
+                Valeur incorrecte
+              </span>
+            </div>
+            <div class="col-sm-3 form-group" [class.has-error]="tp.get('prix').invalid && 
+                                                                tp.get('prix').touched">
+              <label class="control-label">Prix*</label>
+              <input type="text" class="form-control" formControlName="prix">
+              <span class="help-block" *ngIf="tp.get('prix').invalid && 
+                                              tp.get('prix').touched">
+                Valeur incorrecte
+              </span>
+            </div>
+            <div class="col-sm-1">
+              <button class="btn btn-danger btn-sm" style="margin-top:25px" (click)="removeTranchePrix(i)">
+                <span class="glyphicon glyphicon-remove"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 form-group" *ngIf="bareme">
+        <div class="btn-group btn-group-justified">
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary" [disabled]="form.invalid" (click)="onValider()">Modifier</button>
+          </div>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-danger" [disabled]="nbArticles>0" (click)="onSupprimer()">Supprimer</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-sm-offset-3 form-group" *ngIf="!bareme">
+        <button type="button" class="btn btn-primary btn-block" [disabled]="form.invalid" (click)="onValider()">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+<h4 class="text-center">
+  <a [routerLink]="['../Barème']">Liste des baremes</a>
+</h4>
+

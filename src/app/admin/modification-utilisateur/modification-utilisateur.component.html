@@ -1,0 +1,86 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="text-center">
+      <h3 class="panel-title">{{title|uppercase}}</h3>
+    </span>
+  </div>
+  <div class="panel-body">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-4 form-group" [class.has-error]="formErrors.nom">
+          <label class="control-label">Nom*</label>
+          <input type="text" class="form-control" formControlName="nom">
+          <span class="help-block" *ngIf="formErrors.nom">{{formErrors.nom}}</span>
+        </div>
+        <div class="col-sm-4 form-group" [class.has-error]="formErrors.prenom">
+          <label class="control-label">Prénom*</label>
+          <input type="text" class="form-control" formControlName="prenom">
+          <span class="help-block" *ngIf="formErrors.prenom">{{formErrors.prenom}}</span>
+        </div>
+        <div class="col-sm-2 form-group" [class.has-error]="formErrors.valide">
+          <label class="control-label">Actif*</label>
+          <select class="form-control" formControlName="valide">
+            <option value="OUI">OUI</option>
+            <option value="NON">NON</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.valide">{{formErrors.valide}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 form-group" [class.has-error]="formErrors.login">
+          <label class="control-label">Login*</label>
+          <input type="text" class="form-control" formControlName="login">
+          <span class="help-block" *ngIf="formErrors.login">{{formErrors.login}}</span>
+        </div>
+        <div class="col-sm-4 form-group" [class.has-error]="formErrors.password">
+          <label class="control-label">Mot de passe*</label>
+          <input type="text" class="form-control" formControlName="password">
+          <span class="help-block" *ngIf="formErrors.password">{{formErrors.password}}</span>
+        </div>
+        <div class="col-sm-4 form-group" [class.has-error]="formErrors.ensembleUtilisateur">
+          <label class="control-label">Type d'utilisateur*</label>
+          <select class="form-control" formControlName="ensembleUtilisateur">
+            <option *ngFor="let type of typeUtilisateurs" value="{{type.valeur}}">{{type.valeur}}</option>
+          </select>
+          <span class="help-block" *ngIf="formErrors.ensembleUtilisateur">{{formErrors.ensembleUtilisateur}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 form-group">
+          <label class="control-label">Remarque</label>
+          <textarea rows="3" class="form-control" formControlName="remarque"></textarea>
+        </div>
+      </div>
+      <div class="alert alert-info">
+        <h4>Type de taxes autorisés</h4>
+      </div>
+      <div formArrayName="taxeAutorises" *ngFor="let taxe of taxes; let i = index">
+        <div class="col-sm-4" [formGroupName]="i">
+          <label>
+            <input type="checkbox" formControlName="isChecked"> {{taxe.libelle}}
+          </label>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 form-group" *ngIf="utilisateur">
+        <div class="btn-group btn-group-justified">
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary" [disabled]="form.invalid" (click)="onValider()">Modifier</button>
+          </div>
+          <div class="btn-group" role="group">
+            <button type="submit" class="btn btn-danger">Supprimer</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-sm-offset-3 form-group" *ngIf="!utilisateur">
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="form.invalid" (click)="onValider()">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+<h4 class="text-center">
+  <a [routerLink]="['../Utilisateur']">Liste des utilisateurs</a>
+</h4>

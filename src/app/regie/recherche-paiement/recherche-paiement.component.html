@@ -1,0 +1,84 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">RECHERCHE DE PAIEMENT</h3>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Numéro de facture</label>
+          <input type="text" class="form-control" name="noFacture" ngModel>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Type de taxe</label>
+          <select class="form-control" name="typeTaxe" ngModel>
+            <option *ngFor="let taxe of taxes" [value]="taxe.libelle">{{taxe.libelle}}</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Montant du paiement</label>
+          <input type="text" class="form-control" name="montantPayement" ngModel>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Type de paiement</label>
+          <select class="form-control" name="typePayement" ngModel>
+            <option *ngFor="let typePayement of typePayements" [value]="typePayement.id">{{typePayement.typepayement}}</option>
+        </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Etat du paiement</label>
+          <select class="form-control" name="etatPayement" ngModel [ngModel]="'Valide'">
+            <option>Valide</option>
+            <option>Annule</option>
+          </select>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label class="control-label">Banque</label>
+          <select class="form-control" name="banque" ngModel>
+            <option *ngFor="let banque of banques" [value]="banque.id">{{banque.libelle}}</option>
+          </select>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Numéro de quittance</label>
+          <input type="text" class="form-control" name="numQuittance" ngModel>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Numéro de chèque</label>
+          <input type="text" class="form-control" name="numCheque" ngModel>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Nombre facures payées</label>
+          <input type="text" class="form-control" name="nbFacture" ngModel>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Date de paiement
+            <span class="glyphicon glyphicon-calendar"></span>
+        </label>
+          <input type="text" class="form-control" name="datePayement" ngModel
+                  placeholder="DD/MM/YYYY" bsDatepicker [bsConfig]="bsConfig">
+        </div>
+        <div class="col-sm-2 form-group">
+          <label class="control-label">Année</label>
+          <input type="text" class="form-control" name="annee" ngModel [ngModel]="getFullYear()">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+              <i class="fas fa-search"></i> Rechercher <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="panel-footer text-center" *ngIf="message.length>0">
+    <p class="text-danger">
+        {{message}}
+    </p>
+  </div>
+</div>
+<app-list-paiement [payements]="payements"></app-list-paiement>

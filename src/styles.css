@@ -1,0 +1,104 @@
+/* You can add global styles to this file, and also import other style files */
+body
+{
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: url(./assets/images/nuages.jpg);
+}
+
+.list-group-item:hover{
+  background-color:gold !important
+}
+
+.header{
+  margin-bottom: 60px;
+}
+
+.header .navbar-brand {
+  /*padding:0px 10px;*/
+  color:black
+}
+.footer{
+  margin-top: 60px;
+}
+.footer img {
+  height:50px;
+  border-radius:50%;
+  display:inline-block;
+}
+.content{
+  margin-left:5px;
+  margin-right:5px;
+}
+
+a:hover{
+  cursor: pointer;
+}
+
+#menu{
+  position: sticky;
+  top: 60px;
+}
+
+.search{
+  border-radius: 50%;
+}
+.bottom10{
+  margin-bottom: 10px;
+}
+.top10{
+  margin-top: 10px;
+}
+
+.left10{
+  margin-left: 10px;
+}
+
+.left20{
+  margin-left: 20px;
+}
+
+.left30{
+  margin-left: 30px;
+}
+
+th {
+  text-align: center !important
+}
+
+tbody tr:hover{
+  background-color: yellow !important
+}
+
+a {
+  text-decoration-line: underline;
+  color:blue;
+}
+
+a.btn{
+  text-decoration-line: none;
+}
+
+.red{
+  color:#CC3300;
+}
+
+.bold{
+  font-weight: bold;
+}
+  
+.blue{
+  color:blue;
+}
+
+.violet{
+  color:darkmagenta
+}
+
+span.pointer{
+  cursor: pointer;
+  text-decoration-line: underline;
+  font-weight: bolder
+}

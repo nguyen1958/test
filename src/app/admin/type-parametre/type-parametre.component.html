@@ -1,0 +1,51 @@
+<div class="panel panel-primary text-center">
+    <div class="panel-heading pointer-cursor"  (click)="parametre.isHidden=!parametre.isHidden">
+        <h3 class="panel-title">{{parametre.title|uppercase}}</h3>
+        <p>
+            Nombre de résultats :{{listeValeurs?.length}}
+        </p>
+    </div>
+    <div class="panel-body" [hidden]="parametre.isHidden">
+        <form>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="control-label">Liste des valeurs</label>
+                    <select multiple class="form-control" name="liste" ngModel style="height:200px;" (ngModelChange)="onSelection($event)">
+                        <option *ngFor="let data of listeValeurs" [ngValue]="data">{{data.valeur}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <label class="control-label">Valeur à modifier</label>
+                            <input type="text" name="valeurModifier" class="form-control" [disabled]="!valeurModifier.valeur" [(ngModel)]="valeurModifier.valeur">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="btn-group btn-group-justified">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary" [disabled]="!valeurModifier.valeur" (click)="modifier()">Modifier</button>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-danger" [disabled]="!valeurModifier.valeur" (click)="supprimer()">Supprimer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row top10">
+                        <div class="col-sm-12 form-group">
+                            <label class="control-label">Valeur à ajouter</label>
+                            <input type="text" name="valeurAjouter" class="form-control" [(ngModel)]="valeurAjouter.valeur">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-success btn-block" [disabled]="!valeurAjouter.valeur" (click)="ajouter()">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

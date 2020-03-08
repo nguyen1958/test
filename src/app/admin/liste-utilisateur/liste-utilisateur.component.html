@@ -1,0 +1,64 @@
+<div class="panel panel-primary text-center">
+  <div class="panel-heading">
+    <h3 class="panel-title">LISTE DES UTILISATEURS</h3>
+    <p>
+      Nombre de résultats :{{utilisateurs.length}}
+    </p>
+  </div>
+  <div class="panel-body">
+    <form #form="ngForm">
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Code utilisateur</label>
+          <input type="text" class="form-control" name="code" ngModel>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Nom utilisateur</label>
+          <input type="text" class="form-control" name="nom" ngModel>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Prénom utilisateur</label>
+          <input type="text" class="form-control" name="prenom" ngModel>
+        </div>
+        <div class="col-sm-3 form-group">
+          <label class="control-label">Type utilisateur</label>
+          <select class="form-control" name="type" ngModel>
+            <option></option>
+            <option *ngFor="let data of typeUtilisateurs" value="{{data.valeur}}">{{data.valeur}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button type="button" class="btn btn-primary btn-block" (click)="rechercher(form.value)">
+              <i class="fas fa-search"></i> Rechercher
+          </button>
+        </div>
+        <div class="col-sm-2 text-center pull-right">
+            <a class="btn btn-success" [routerLink]="['../Modification utilisateur']">Ajouter un utilisateur</a>
+          </div>
+      </div>
+    </form>
+    <hr style="border:1px solid silver">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Identifiant</th>
+          <th>Nom - Prenom</th>
+          <th>Type d'utilisateur</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of utilisateurs" routerLinkActive='active'>
+          <td>
+            <a [routerLink]="['../Modification utilisateur',{id:data.numeroUser}]">
+              {{data.numeroUser}}
+            </a>
+          </td>
+          <td>{{data.nom}} {{data.prenom}}</td>
+          <td>{{data.ensembleUtilisateur}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
